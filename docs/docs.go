@@ -12,8 +12,8 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "contact": {
             "name": "Babulal Tamang",
-            "url": "https://github.com/hamropani/pani-backend",
-            "email": "hamropani.office@hamropani.com"
+            "url": "https://github.com/sugaml/authserver",
+            "email": "authserver.office@authserver.com"
         },
         "version": "{{.Version}}"
     },
@@ -94,7 +94,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.registerRequest"
+                            "$ref": "#/definitions/domain.RegisterRequest"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User created",
                         "schema": {
-                            "$ref": "#/definitions/http.userResponse"
+                            "$ref": "#/definitions/domain.UserResponse"
                         }
                     },
                     "400": {
@@ -169,7 +169,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User displayed",
                         "schema": {
-                            "$ref": "#/definitions/http.userResponse"
+                            "$ref": "#/definitions/domain.UserResponse"
                         }
                     },
                     "400": {
@@ -231,7 +231,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User updated",
                         "schema": {
-                            "$ref": "#/definitions/http.userResponse"
+                            "$ref": "#/definitions/domain.UserResponse"
                         }
                     },
                     "400": {
@@ -334,6 +334,66 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@example.com"
+                },
+                "email_confirmed": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Sugam"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "12345678"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "security_stamp": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "1970-01-01T00:00:00Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "test@example.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "1970-01-01T00:00:00Z"
+                }
+            }
+        },
         "domain.UserRole": {
             "type": "object",
             "properties": {
@@ -381,37 +441,6 @@ const docTemplate = `{
                 }
             }
         },
-        "http.registerRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
-            "properties": {
-                "countryCode": {
-                    "type": "string",
-                    "example": "+977"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "test@example.com"
-                },
-                "mobileNum": {
-                    "type": "string",
-                    "example": "987665++++"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "12345678"
-                }
-            }
-        },
         "http.response": {
             "type": "object",
             "properties": {
@@ -428,31 +457,6 @@ const docTemplate = `{
         },
         "http.updateUserRequest": {
             "type": "object"
-        },
-        "http.userResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string",
-                    "example": "1970-01-01T00:00:00Z"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "test@example.com"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "example": "1970-01-01T00:00:00Z"
-                }
-            }
         }
     },
     "securityDefinitions": {
@@ -472,7 +476,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/v1",
 	Schemes:          []string{"http", "https"},
 	Title:            "AuthServer API",
-	Description:      "This is a simple RESTful PaAni Service API written in Go using Gin web framework, PostgreSQL database, and Redis cache.",
+	Description:      "This is a simple RESTful AuthServer Service API written in Go using Gin web framework, PostgreSQL database.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

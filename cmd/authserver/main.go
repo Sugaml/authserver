@@ -19,11 +19,11 @@ import (
 
 // @title					AuthServer API
 // @version					1.0
-// @description				This is a simple RESTful PaAni Service API written in Go using Gin web framework, PostgreSQL database, and Redis cache.
+// @description				This is a simple RESTful AuthServer Service API written in Go using Gin web framework, PostgreSQL database.
 //
 // @contact.name			Babulal Tamang
-// @contact.url				https://github.com/hamropani/pani-backend
-// @contact.email			hamropani.office@hamropani.com
+// @contact.url				https://github.com/sugaml/authserver
+// @contact.email			authserver.office@authserver.com
 //
 // @host					localhost:8080
 // @BasePath				/v1

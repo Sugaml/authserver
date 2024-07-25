@@ -5,15 +5,6 @@ import (
 	"github.com/sugaml/authserver/internal/core/domain"
 )
 
-// registerRequest represents the request body for creating a user
-type registerRequest struct {
-	Name        string `json:"name" binding:"required" example:"John Doe"`
-	Email       string `json:"email" binding:"required,email" example:"test@example.com"`
-	Password    string `json:"password" binding:"required,min=8" example:"12345678"`
-	MobileNum   string `json:"mobileNum" example:"987665++++"`
-	CountryCode string `json:"countryCode" example:"+977"`
-}
-
 // Register godoc
 //
 //	@Summary		Register a new user
@@ -21,8 +12,8 @@ type registerRequest struct {
 //	@Tags			Users
 //	@Accept			json
 //	@Produce		json
-//	@Param			registerRequest	body		registerRequest	true	"Register request"
-//	@Success		200				{object}	userResponse	"User created"
+//	@Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
+//	@Success		200				{object}	domain.UserResponse	"User created"
 //	@Failure		400				{object}	errorResponse	"Validation error"
 //	@Failure		401				{object}	errorResponse	"Unauthorized error"
 //	@Failure		404				{object}	errorResponse	"Data not found error"
@@ -30,7 +21,7 @@ type registerRequest struct {
 //	@Failure		500				{object}	errorResponse	"Internal server error"
 //	@Router			/users [post]
 func (uh *Handler) Register(ctx *gin.Context) {
-	var req registerRequest
+	var req domain.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		validationError(ctx, err)
 		return
@@ -107,7 +98,7 @@ type getUserRequest struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		uint64			true	"User ID"
-//	@Success		200	{object}	userResponse	"User displayed"
+//	@Success		200	{object}	domain.UserResponse	"User displayed"
 //	@Failure		400	{object}	errorResponse	"Validation error"
 //	@Failure		404	{object}	errorResponse	"Data not found error"
 //	@Failure		500	{object}	errorResponse	"Internal server error"
@@ -146,7 +137,7 @@ type updateUserRequest struct {
 //	@Produce		json
 //	@Param			id					path		uint64				true	"User ID"
 //	@Param			updateUserRequest	body		updateUserRequest	true	"Update user request"
-//	@Success		200					{object}	userResponse		"User updated"
+//	@Success		200					{object}	domain.UserResponse		"User updated"
 //	@Failure		400					{object}	errorResponse		"Validation error"
 //	@Failure		401					{object}	errorResponse		"Unauthorized error"
 //	@Failure		403					{object}	errorResponse		"Forbidden error"

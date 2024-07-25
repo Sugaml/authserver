@@ -2,6 +2,8 @@ package domain
 
 import (
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 // UserResponse represents a user response body
@@ -63,14 +65,13 @@ type UserToken struct {
 }
 
 type User struct {
-	ID                   uint        `gorm:"primary_key" json:"id"`
+	gorm.Model
 	UserName             string      `json:"user_name"`
 	NormalizedUserName   string      `json:"normalized_user_name"`
 	Email                string      `json:"email"`
 	EmailConfirmed       bool        `json:"email_confirmed"`
 	Password             string      `json:"password_hash"`
 	SecurityStamp        string      `json:"security_stamp"`
-	PhoneNumber          string      `json:"phone_number"`
 	PhoneNumberConfirmed bool        `json:"phone_number_confirmed"`
 	TwoFactorEnabled     bool        `json:"two_factor_enabled"`
 	LockoutEnd           *time.Time  `json:"lockout_end"`
@@ -81,6 +82,17 @@ type User struct {
 	UserLogins           []UserLogin `gorm:"foreignkey:UserID" json:"user_logins"`
 	UserRoles            []UserRole  `gorm:"foreignkey:UserID" json:"user_roles"`
 	UserTokens           []UserToken `gorm:"foreignkey:UserID" json:"user_tokens"`
+}
+
+// RegisterRequest represents the request body for creating a user
+type RegisterRequest struct {
+	Name           string `json:"name" binding:"required" example:"Sugam"`
+	UserName       string `json:"user_name"`
+	Email          string `json:"email" binding:"required,email" example:"test@example.com"`
+	Password       string `json:"password" binding:"required,min=8" example:"12345678"`
+	EmailConfirmed bool   `json:"email_confirmed"`
+	SecurityStamp  string `json:"security_stamp"`
+	PhoneNumber    string `json:"phone_number"`
 }
 
 type ClientCorsOrigin struct {

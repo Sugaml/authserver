@@ -1,5 +1,48 @@
 basePath: /v1
 definitions:
+  domain.RegisterRequest:
+    properties:
+      email:
+        example: test@example.com
+        type: string
+      email_confirmed:
+        type: boolean
+      name:
+        example: Sugam
+        type: string
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+      phone_number:
+        type: string
+      security_stamp:
+        type: string
+      user_name:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  domain.UserResponse:
+    properties:
+      created_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+      email:
+        example: test@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      updated_at:
+        example: "1970-01-01T00:00:00Z"
+        type: string
+    type: object
   domain.UserRole:
     properties:
       roleID:
@@ -32,29 +75,6 @@ definitions:
         example: 100
         type: integer
     type: object
-  http.registerRequest:
-    properties:
-      countryCode:
-        example: "+977"
-        type: string
-      email:
-        example: test@example.com
-        type: string
-      mobileNum:
-        example: 987665++++
-        type: string
-      name:
-        example: John Doe
-        type: string
-      password:
-        example: "12345678"
-        minLength: 8
-        type: string
-    required:
-    - email
-    - name
-    - password
-    type: object
   http.response:
     properties:
       data: {}
@@ -67,32 +87,14 @@ definitions:
     type: object
   http.updateUserRequest:
     type: object
-  http.userResponse:
-    properties:
-      created_at:
-        example: "1970-01-01T00:00:00Z"
-        type: string
-      email:
-        example: test@example.com
-        type: string
-      id:
-        example: 1
-        type: integer
-      name:
-        example: John Doe
-        type: string
-      updated_at:
-        example: "1970-01-01T00:00:00Z"
-        type: string
-    type: object
 host: localhost:8080
 info:
   contact:
-    email: hamropani.office@hamropani.com
+    email: authserver.office@authserver.com
     name: Babulal Tamang
-    url: https://github.com/hamropani/pani-backend
-  description: This is a simple RESTful PaAni Service API written in Go using Gin
-    web framework, PostgreSQL database, and Redis cache.
+    url: https://github.com/sugaml/authserver
+  description: This is a simple RESTful AuthServer Service API written in Go using
+    Gin web framework, PostgreSQL database.
   title: AuthServer API
   version: "1.0"
 paths:
@@ -142,14 +144,14 @@ paths:
         name: registerRequest
         required: true
         schema:
-          $ref: '#/definitions/http.registerRequest'
+          $ref: '#/definitions/domain.RegisterRequest'
       produces:
       - application/json
       responses:
         "200":
           description: User created
           schema:
-            $ref: '#/definitions/http.userResponse'
+            $ref: '#/definitions/domain.UserResponse'
         "400":
           description: Validation error
           schema:
@@ -232,7 +234,7 @@ paths:
         "200":
           description: User displayed
           schema:
-            $ref: '#/definitions/http.userResponse'
+            $ref: '#/definitions/domain.UserResponse'
         "400":
           description: Validation error
           schema:
@@ -272,7 +274,7 @@ paths:
         "200":
           description: User updated
           schema:
-            $ref: '#/definitions/http.userResponse'
+            $ref: '#/definitions/domain.UserResponse'
         "400":
           description: Validation error
           schema:
