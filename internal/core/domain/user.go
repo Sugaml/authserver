@@ -4,6 +4,22 @@ import (
 	"time"
 )
 
+// UserResponse represents a user response body
+type UserResponse struct {
+	ID        uint      `json:"id" example:"1"`
+	Name      string    `json:"name" example:"John Doe"`
+	Email     string    `json:"email" example:"test@example.com"`
+	CreatedAt time.Time `json:"created_at" example:"1970-01-01T00:00:00Z"`
+	UpdatedAt time.Time `json:"updated_at" example:"1970-01-01T00:00:00Z"`
+}
+
+// NewUserResponse is a helper function to create a response body for handling user data
+func (user *User) NewUserResponse() UserResponse {
+	return UserResponse{
+		ID: user.ID,
+	}
+}
+
 type RoleClaim struct {
 	ID         string `gorm:"primary_key"`
 	RoleID     string
@@ -67,24 +83,6 @@ type User struct {
 	UserTokens           []UserToken `gorm:"foreignkey:UserID" json:"user_tokens"`
 }
 
-type Client struct {
-	ID                 string `gorm:"primary_key"`
-	Enabled            bool
-	ClientID           string
-	ProtocolType       string
-	ClientName         string
-	Description        string
-	ClientUri          string
-	LogoutUri          string
-	EnabledLocalLogin  bool
-	ClientCorsOrigins  []ClientCorsOrigin  `gorm:"foreignkey:ClientID"`
-	ClientGrantTypes   []ClientGrantType   `gorm:"foreignkey:ClientID"`
-	ClientProperties   []ClientProperty    `gorm:"foreignkey:ClientID"`
-	ClientRedirectUris []ClientRedirectUri `gorm:"foreignkey:ClientID"`
-	ClientScopes       []ClientScope       `gorm:"foreignkey:ClientID"`
-	ClientSecrets      []ClientSecret      `gorm:"foreignkey:ClientID"`
-}
-
 type ClientCorsOrigin struct {
 	ID       string `gorm:"primary_key"`
 	Origin   string
@@ -122,28 +120,6 @@ type ClientSecret struct {
 	Value       string
 	Expiration  *time.Time
 	ClientID    string
-}
-
-type Customer struct {
-	ID                        string `gorm:"primary_key"`
-	CreatedUtc                time.Time
-	UpdatedUtc                time.Time
-	Username                  string
-	PasswordHash              string
-	SecurityStamp             string
-	ConcurrencyStamp          string
-	Email                     string
-	EmailConfirmed            bool
-	PhoneNumber               string
-	PhoneNumberConfirmed      bool
-	TwoFactorEnabled          bool
-	LockoutEnd                *time.Time
-	LockoutEnabled            bool
-	AccessFailedCount         int
-	CustomerExternalDomains   []CustomerExternalDomain   `gorm:"foreignkey:CustomerID"`
-	CustomerExternalGroups    []CustomerExternalGroup    `gorm:"foreignkey:CustomerID"`
-	CustomerIdentityProviders []CustomerIdentityProvider `gorm:"foreignkey:CustomerID"`
-	AuditMessages             []AuditMessage             `gorm:"foreignkey:CustomerID"`
 }
 
 type CustomerExternalDomain struct {

@@ -1,6 +1,6 @@
 module github.com/sugaml/authserver
 
-go 1.22.4
+go 1.22
 
 require (
 	aidanwoods.dev/go-paseto v1.5.1

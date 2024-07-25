@@ -3,7 +3,6 @@ package http
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -39,34 +38,6 @@ func newMeta(total, limit, skip uint64) meta {
 		Total: total,
 		Limit: limit,
 		Skip:  skip,
-	}
-}
-
-// authResponse represents an authentication response body
-type authResponse struct {
-	AccessToken string `json:"token" example:"v2.local.Gdh5kiOTyyaQ3_bNykYDeYHO21Jg2..."`
-}
-
-// newAuthResponse is a helper function to create a response body for handling authentication data
-func newAuthResponse(token string) authResponse {
-	return authResponse{
-		AccessToken: token,
-	}
-}
-
-// userResponse represents a user response body
-type userResponse struct {
-	ID        uint      `json:"id" example:"1"`
-	Name      string    `json:"name" example:"John Doe"`
-	Email     string    `json:"email" example:"test@example.com"`
-	CreatedAt time.Time `json:"created_at" example:"1970-01-01T00:00:00Z"`
-	UpdatedAt time.Time `json:"updated_at" example:"1970-01-01T00:00:00Z"`
-}
-
-// newUserResponse is a helper function to create a response body for handling user data
-func newUserResponse(user *domain.User) userResponse {
-	return userResponse{
-		ID: user.ID,
 	}
 }
 

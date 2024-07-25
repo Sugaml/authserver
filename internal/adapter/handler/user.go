@@ -45,10 +45,7 @@ func (uh *Handler) Register(ctx *gin.Context) {
 		handleError(ctx, err)
 		return
 	}
-
-	rsp := newUserResponse(&user)
-
-	handleSuccess(ctx, rsp)
+	handleSuccess(ctx, user.NewUserResponse())
 }
 
 // listUsersRequest represents the request body for listing users
@@ -73,7 +70,7 @@ type listUsersRequest struct {
 //	@Security		BearerAuth
 func (uh *Handler) ListUsers(ctx *gin.Context) {
 	var req listUsersRequest
-	var usersList []userResponse
+	var usersList []domain.UserResponse
 
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		validationError(ctx, err)
@@ -87,7 +84,7 @@ func (uh *Handler) ListUsers(ctx *gin.Context) {
 	}
 
 	for _, user := range users {
-		usersList = append(usersList, newUserResponse(&user))
+		usersList = append(usersList, user.NewUserResponse())
 	}
 
 	total := uint64(len(usersList))
@@ -129,9 +126,7 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	rsp := newUserResponse(user)
-
-	handleSuccess(ctx, rsp)
+	handleSuccess(ctx, user.NewUserResponse())
 }
 
 // updateUserRequest represents the request body for updating a user
@@ -171,9 +166,7 @@ func (uh *Handler) UpdateUser(ctx *gin.Context) {
 		Password: req.Password,
 	}
 
-	rsp := newUserResponse(&user)
-
-	handleSuccess(ctx, rsp)
+	handleSuccess(ctx, user.NewUserResponse())
 }
 
 // deleteUserRequest represents the request body for deleting a user
