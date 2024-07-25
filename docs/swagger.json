@@ -220,7 +220,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.updateUserRequest"
+                            "$ref": "#/definitions/domain.UpdateUserRequest"
                         }
                     }
                 ],
@@ -366,6 +366,9 @@
                 }
             }
         },
+        "domain.UpdateUserRequest": {
+            "type": "object"
+        },
         "domain.UserResponse": {
             "type": "object",
             "properties": {
@@ -451,9 +454,6 @@
                     "example": true
                 }
             }
-        },
-        "http.updateUserRequest": {
-            "type": "object"
         }
     },
     "securityDefinitions": {

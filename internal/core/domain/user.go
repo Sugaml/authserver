@@ -95,6 +95,14 @@ type RegisterRequest struct {
 	PhoneNumber    string `json:"phone_number"`
 }
 
+// UpdateUserRequest represents the request body for updating a user
+type UpdateUserRequest struct {
+	Name     string   `json:"name" binding:"omitempty,required" example:"John Doe"`
+	Email    string   `json:"email" binding:"omitempty,required,email" example:"test@example.com"`
+	Password string   `json:"password" binding:"omitempty,required,min=8" example:"12345678"`
+	Role     UserRole `json:"role" binding:"omitempty,required,user_role" example:"admin"`
+}
+
 type ClientCorsOrigin struct {
 	ID       string `gorm:"primary_key"`
 	Origin   string

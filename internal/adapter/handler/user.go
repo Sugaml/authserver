@@ -28,6 +28,7 @@ func (uh *Handler) Register(ctx *gin.Context) {
 	}
 
 	user := domain.User{
+		UserName: req.Name,
 		Email:    req.Email,
 		Password: req.Password,
 	}
@@ -41,8 +42,8 @@ func (uh *Handler) Register(ctx *gin.Context) {
 
 // listUsersRequest represents the request body for listing users
 type listUsersRequest struct {
-	Skip  uint64 `form:"skip" binding:"required,min=0" example:"0"`
-	Limit uint64 `form:"limit" binding:"required,min=5" example:"5"`
+	Skip  uint64 `form:"skip" example:"0"`
+	Limit uint64 `form:"limit" example:"5"`
 }
 
 // ListUsers godoc
@@ -120,14 +121,6 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 	handleSuccess(ctx, user.NewUserResponse())
 }
 
-// updateUserRequest represents the request body for updating a user
-type updateUserRequest struct {
-	Name     string          `json:"name" binding:"omitempty,required" example:"John Doe"`
-	Email    string          `json:"email" binding:"omitempty,required,email" example:"test@example.com"`
-	Password string          `json:"password" binding:"omitempty,required,min=8" example:"12345678"`
-	Role     domain.UserRole `json:"role" binding:"omitempty,required,user_role" example:"admin"`
-}
-
 // UpdateUser godoc
 //
 //	@Summary		Update a user
@@ -136,7 +129,7 @@ type updateUserRequest struct {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id					path		uint64				true	"User ID"
-//	@Param			updateUserRequest	body		updateUserRequest	true	"Update user request"
+//	@Param			updateUserRequest	body		domain.UpdateUserRequest	true	"Update user request"
 //	@Success		200					{object}	domain.UserResponse		"User updated"
 //	@Failure		400					{object}	errorResponse		"Validation error"
 //	@Failure		401					{object}	errorResponse		"Unauthorized error"
@@ -146,7 +139,7 @@ type updateUserRequest struct {
 //	@Router			/users/{id} [put]
 //	@Security		BearerAuth
 func (uh *Handler) UpdateUser(ctx *gin.Context) {
-	var req updateUserRequest
+	var req domain.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		validationError(ctx, err)
 		return

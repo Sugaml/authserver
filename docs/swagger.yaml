@@ -25,6 +25,8 @@ definitions:
     - name
     - password
     type: object
+  domain.UpdateUserRequest:
+    type: object
   domain.UserResponse:
     properties:
       created_at:
@@ -84,8 +86,6 @@ definitions:
       success:
         example: true
         type: boolean
-    type: object
-  http.updateUserRequest:
     type: object
 host: localhost:8080
 info:
@@ -267,7 +267,7 @@ paths:
         name: updateUserRequest
         required: true
         schema:
-          $ref: '#/definitions/http.updateUserRequest'
+          $ref: '#/definitions/domain.UpdateUserRequest'
       produces:
       - application/json
       responses:

@@ -223,7 +223,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/http.updateUserRequest"
+                            "$ref": "#/definitions/domain.UpdateUserRequest"
                         }
                     }
                 ],
@@ -369,6 +369,9 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.UpdateUserRequest": {
+            "type": "object"
+        },
         "domain.UserResponse": {
             "type": "object",
             "properties": {
@@ -454,9 +457,6 @@ const docTemplate = `{
                     "example": true
                 }
             }
-        },
-        "http.updateUserRequest": {
-            "type": "object"
         }
     },
     "securityDefinitions": {
