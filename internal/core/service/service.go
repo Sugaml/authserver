@@ -11,6 +11,7 @@ type Service struct {
 
 type IService interface {
 	UserServiceGetter
+	CustomerServiceGetter
 }
 
 func NewService(repo repository.IRepository) IService {
@@ -21,4 +22,8 @@ func NewService(repo repository.IRepository) IService {
 
 func (s *Service) User() port.UserService {
 	return newUserService(s.repo)
+}
+
+func (s *Service) Customer() port.CustomerService {
+	return newCustomerService(s.repo)
 }
