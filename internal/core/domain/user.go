@@ -135,7 +135,51 @@ type ClientScope struct {
 }
 
 type ClientSecret struct {
-	ID          string `gorm:"primary_key"`
+	BaseModel
+	Description string
+	Value       string
+	Expiration  *time.Time
+	ClientID    string
+}
+
+type ClientSecretRequest struct {
+	Description string
+	Value       string
+	Expiration  *time.Time
+	ClientID    string
+}
+
+type ClientSecretResponse struct {
+	ID          uint
+	Description string
+	Value       string
+	Expiration  *time.Time
+	ClientID    string
+}
+
+func (a *ClientSecret) New(r *ClientSecretRequest) {
+	a.Description = r.Description
+	a.Value = r.Value
+	a.Expiration = r.Expiration
+}
+
+func (a *ClientSecret) Validate() error {
+	return nil
+}
+
+func (r *ClientSecretUpdateRequest) NewUpdate() Map {
+	return map[string]interface{}{}
+}
+
+type ClientSecretListRequest struct {
+	ListRequest
+	Description string
+	Value       string
+	Expiration  *time.Time
+	ClientID    string
+}
+
+type ClientSecretUpdateRequest struct {
 	Description string
 	Value       string
 	Expiration  *time.Time

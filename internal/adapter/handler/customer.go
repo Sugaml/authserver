@@ -1,6 +1,8 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sugaml/authserver/internal/core/domain"
 )
@@ -22,7 +24,7 @@ import (
 func (uh *Handler) createCustomer(ctx *gin.Context) {
 	var req domain.CustomerRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -41,8 +43,8 @@ func (uh *Handler) createCustomer(ctx *gin.Context) {
 	}
 	_, err := uh.svc.Customer().Create(ctx, &customer)
 	if err != nil {
-		handleError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	handleSuccess(ctx, customer.CustomerResponse())
+	SuccessResponse(ctx, customer.CustomerResponse())
 }

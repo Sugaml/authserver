@@ -12,6 +12,8 @@ type Repository struct {
 type IRepository interface {
 	UserGetter
 	CustomerGetter
+	ClientGetter
+	ClientSecretGetter
 }
 
 func NewRepository(db *gorm.DB) IRepository {
@@ -26,4 +28,12 @@ func (r *Repository) User() port.UserRepository {
 
 func (r *Repository) Customer() port.CustomerRepository {
 	return newCustomerRepository(r.db)
+}
+
+func (r *Repository) Client() port.ClientRepository {
+	return newClientRepository(r.db)
+}
+
+func (r *Repository) ClientSecret() port.ClientSecretRepository {
+	return newClientSecretRepository(r.db)
 }

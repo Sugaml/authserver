@@ -1,6 +1,8 @@
 package http
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sugaml/authserver/internal/core/domain"
 )
@@ -23,7 +25,7 @@ import (
 func (uh *Handler) Register(ctx *gin.Context) {
 	var req domain.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -34,10 +36,10 @@ func (uh *Handler) Register(ctx *gin.Context) {
 	}
 	_, err := uh.svc.User().Register(ctx, &user)
 	if err != nil {
-		handleError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	handleSuccess(ctx, user.NewUserResponse())
+	SuccessResponse(ctx, user.NewUserResponse())
 }
 
 // listUsersRequest represents the request body for listing users
@@ -65,13 +67,13 @@ func (uh *Handler) ListUsers(ctx *gin.Context) {
 	var usersList []domain.UserResponse
 
 	if err := ctx.ShouldBindQuery(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	users, err := uh.svc.User().List(ctx, req.Skip, req.Limit)
 	if err != nil {
-		handleError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -79,11 +81,7 @@ func (uh *Handler) ListUsers(ctx *gin.Context) {
 		usersList = append(usersList, user.NewUserResponse())
 	}
 
-	total := uint64(len(usersList))
-	meta := newMeta(total, req.Limit, req.Skip)
-	rsp := toMap(meta, usersList, "users")
-
-	handleSuccess(ctx, rsp)
+	SuccessResponse(ctx, usersList)
 }
 
 // getUserRequest represents the request body for getting a user
@@ -108,17 +106,16 @@ type getUserRequest struct {
 func (uh *Handler) GetUser(ctx *gin.Context) {
 	var req getUserRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	user, err := uh.svc.User().Get(ctx, req.ID)
 	if err != nil {
-		handleError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
-	handleSuccess(ctx, user.NewUserResponse())
+	SuccessResponse(ctx, user.NewUserResponse())
 }
 
 // UpdateUser godoc
@@ -141,7 +138,7 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 func (uh *Handler) UpdateUser(ctx *gin.Context) {
 	var req domain.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
@@ -149,8 +146,7 @@ func (uh *Handler) UpdateUser(ctx *gin.Context) {
 		Email:    req.Email,
 		Password: req.Password,
 	}
-
-	handleSuccess(ctx, user.NewUserResponse())
+	SuccessResponse(ctx, user.NewUserResponse())
 }
 
 // deleteUserRequest represents the request body for deleting a user
@@ -177,15 +173,14 @@ type deleteUserRequest struct {
 func (uh *Handler) DeleteUser(ctx *gin.Context) {
 	var req deleteUserRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
-		validationError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 
 	err := uh.svc.User().Delete(ctx, req.ID)
 	if err != nil {
-		handleError(ctx, err)
+		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
-	handleSuccess(ctx, nil)
+	SuccessResponse(ctx, nil)
 }

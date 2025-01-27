@@ -1,6 +1,7 @@
 package http
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func authMiddleware(token port.TokenService) gin.HandlerFunc {
 		isEmpty := len(authorizationHeader) == 0
 		if isEmpty {
 			err := domain.ErrEmptyAuthorizationHeader
-			handleAbort(ctx, err)
+			ErrorResponse(ctx, http.StatusUnauthorized, err)
 			return
 		}
 
@@ -33,21 +34,21 @@ func authMiddleware(token port.TokenService) gin.HandlerFunc {
 		isValid := len(fields) == 2
 		if !isValid {
 			err := domain.ErrInvalidAuthorizationHeader
-			handleAbort(ctx, err)
+			ErrorResponse(ctx, http.StatusUnauthorized, err)
 			return
 		}
 
 		currentAuthorizationType := strings.ToLower(fields[0])
 		if currentAuthorizationType != authorizationType {
 			err := domain.ErrInvalidAuthorizationType
-			handleAbort(ctx, err)
+			ErrorResponse(ctx, http.StatusUnauthorized, err)
 			return
 		}
 
 		accessToken := fields[1]
 		payload, err := token.VerifyToken(accessToken)
 		if err != nil {
-			handleAbort(ctx, err)
+			ErrorResponse(ctx, http.StatusUnauthorized, err)
 			return
 		}
 
@@ -64,7 +65,7 @@ func adminMiddleware() gin.HandlerFunc {
 		isAdmin := true
 		if !isAdmin {
 			err := domain.ErrForbidden
-			handleAbort(ctx, err)
+			ErrorResponse(ctx, http.StatusUnauthorized, err)
 			return
 		}
 
