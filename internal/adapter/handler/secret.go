@@ -60,7 +60,7 @@ func (ch *Handler) GetClientSecret(ctx *gin.Context) {
 // @Produce  			json
 // @Security 			ApiKeyAuth
 // @Param 				id 								path 		string 								true 	"ClientSecret id"
-// @Param 				UpdateClientSecretRequest	 	body 		domain.UpdateClientSecretRequest 	true 	"Update ClientSecret Response request"
+// @Param 				UpdateClientSecretRequest	 	body 		domain.ClientSecretUpdateRequest 	true 	"Update ClientSecret Response request"
 // @Success 			200 							{object} 	domain.ClientSecretResponse
 // @Router 				/ClientSecret/{id} 				[put]
 func (h *Handler) UpdateClientSecret(ctx *gin.Context) {

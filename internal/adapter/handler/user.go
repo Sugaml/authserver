@@ -16,11 +16,6 @@ import (
 //	@Produce		json
 //	@Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
 //	@Success		200				{object}	domain.UserResponse	"User created"
-//	@Failure		400				{object}	errorResponse	"Validation error"
-//	@Failure		401				{object}	errorResponse	"Unauthorized error"
-//	@Failure		404				{object}	errorResponse	"Data not found error"
-//	@Failure		409				{object}	errorResponse	"Data conflict error"
-//	@Failure		500				{object}	errorResponse	"Internal server error"
 //	@Router			/users [post]
 func (uh *Handler) Register(ctx *gin.Context) {
 	var req domain.RegisterRequest
@@ -57,9 +52,6 @@ type listUsersRequest struct {
 //	@Produce		json
 //	@Param			skip	query		uint64			true	"Skip"
 //	@Param			limit	query		uint64			true	"Limit"
-//	@Success		200		{object}	meta			"Users displayed"
-//	@Failure		400		{object}	errorResponse	"Validation error"
-//	@Failure		500		{object}	errorResponse	"Internal server error"
 //	@Router			/users [get]
 //	@Security		BearerAuth
 func (uh *Handler) ListUsers(ctx *gin.Context) {
@@ -98,9 +90,6 @@ type getUserRequest struct {
 //	@Produce		json
 //	@Param			id	path		uint64			true	"User ID"
 //	@Success		200	{object}	domain.UserResponse	"User displayed"
-//	@Failure		400	{object}	errorResponse	"Validation error"
-//	@Failure		404	{object}	errorResponse	"Data not found error"
-//	@Failure		500	{object}	errorResponse	"Internal server error"
 //	@Router			/users/{id} [get]
 //	@Security		BearerAuth
 func (uh *Handler) GetUser(ctx *gin.Context) {
@@ -119,29 +108,22 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 }
 
 // UpdateUser godoc
-//
-//	@Summary		Update a user
-//	@Description	Update a user's name, email, password, or role by id
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Param			id					path		uint64				true	"User ID"
-//	@Param			updateUserRequest	body		domain.UpdateUserRequest	true	"Update user request"
-//	@Success		200					{object}	domain.UserResponse		"User updated"
-//	@Failure		400					{object}	errorResponse		"Validation error"
-//	@Failure		401					{object}	errorResponse		"Unauthorized error"
-//	@Failure		403					{object}	errorResponse		"Forbidden error"
-//	@Failure		404					{object}	errorResponse		"Data not found error"
-//	@Failure		500					{object}	errorResponse		"Internal server error"
-//	@Router			/users/{id} [put]
-//	@Security		BearerAuth
+// @Summary		Update a user
+// @Description	Update a user's name, email, password, or role by id
+// @Security		BearerAuth
+// @Tags			Users
+// @Accept			json
+// @Produce			json
+// @Param			id					path		uint64				true	"User ID"
+// @Param			updateUserRequest	body		domain.UpdateUserRequest	true	"Update user request"
+// @Success			200					{object}	domain.UserResponse		"User updated"
+// @Router			/users/{id} [put]
 func (uh *Handler) UpdateUser(ctx *gin.Context) {
 	var req domain.UpdateUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
 	user := domain.User{
 		Email:    req.Email,
 		Password: req.Password,
@@ -154,29 +136,21 @@ type deleteUserRequest struct {
 	ID uint64 `uri:"id" binding:"required,min=1" example:"1"`
 }
 
-// DeleteUser godoc
-//
-//	@Summary		Delete a user
-//	@Description	Delete a user by id
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Param			id	path		uint64			true	"User ID"
-//	@Success		200	{object}	response		"User deleted"
-//	@Failure		400	{object}	errorResponse	"Validation error"
-//	@Failure		401	{object}	errorResponse	"Unauthorized error"
-//	@Failure		403	{object}	errorResponse	"Forbidden error"
-//	@Failure		404	{object}	errorResponse	"Data not found error"
-//	@Failure		500	{object}	errorResponse	"Internal server error"
-//	@Router			/users/{id} [delete]
-//	@Security		BearerAuth
+// DeleteUser 		godoc
+// @Summary			Delete a user
+// @Description		Delete a user by id
+// @Tags			Users
+// @Security		BearerAuth
+// @Accept			json
+// @Produce			json
+// @Param			id	path		uint64			true	"User ID"
+// @Router			/users/{id} [delete]
 func (uh *Handler) DeleteUser(ctx *gin.Context) {
 	var req deleteUserRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
 	err := uh.svc.User().Delete(ctx, req.ID)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)

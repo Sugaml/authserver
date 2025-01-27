@@ -17,22 +17,12 @@ import (
 	"github.com/sugaml/authserver/internal/core/service"
 )
 
-// @title					AuthServer API
-// @version					1.0
-// @description				This is a simple RESTful AuthServer Service API written in Go using Gin web framework, PostgreSQL database.
-//
-// @contact.name			Babulal Tamang
-// @contact.url				https://github.com/sugaml/authserver
-// @contact.email			authserver.office@authserver.com
-//
-// @host					localhost:8080
-// @BasePath				/v1
-// @schemes					http https
-//
-// @securityDefinitions.apikey	BearerAuth
-// @in							header
-// @name						Authorization
-// @description				Type "Bearer" followed by a space and the access token.
+// @title						auth-server API
+// @version						1.0
+// @description					This is a simple RESTful Service API written in Go using Gin web framework
+// @securityDefinitions.apikey 	ApiKeyAuth
+// @in 							Header
+// @name 						Authorization
 func main() {
 	// Load environment variables
 	config, err := config.New()

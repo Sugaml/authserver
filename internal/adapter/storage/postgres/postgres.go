@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" //postgres database driver
 	"github.com/sugaml/authserver/internal/adapter/config"
+	"github.com/sugaml/authserver/internal/core/domain"
 )
 
 func NewPostgres(config *config.DB) (*gorm.DB, error) {
@@ -26,5 +27,11 @@ func NewPostgres(config *config.DB) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+	db.AutoMigrate(
+		&domain.User{},
+		&domain.Customer{},
+		&domain.Client{},
+		&domain.ClientSecret{},
+	)
 	return db, nil
 }

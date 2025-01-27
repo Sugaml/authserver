@@ -18,3 +18,6 @@ lint:
 
 mock:
 	mockgen -package mockdb -destination internal/core/port/mock/user.go internal/core/port UserRepository
+
+swag:
+	swag init -g cmd/main.go -o ./docs --ot go --parseInternal true

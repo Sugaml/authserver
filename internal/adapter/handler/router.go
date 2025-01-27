@@ -35,6 +35,8 @@ func (h *Handler) NewRouter() error {
 	v1 := h.router.Group("/v1")
 
 	h.User(v1)
+	h.Client(v1)
+	h.Secret(v1)
 
 	return nil
 }
@@ -56,6 +58,28 @@ func (h *Handler) User(v1 *gin.RouterGroup) {
 			}
 		}
 
+	}
+}
+
+// Client Endpoint
+func (h *Handler) Client(v1 *gin.RouterGroup) {
+	client := v1.Group("/client")
+	{
+		client.POST("", h.CreateClient)
+		client.GET("/:id", h.GetClient)
+		client.PUT("/:id", h.UpdateClient)
+		client.DELETE("/:id", h.DeleteClient)
+	}
+}
+
+// Secret Endpoint
+func (h *Handler) Secret(v1 *gin.RouterGroup) {
+	secret := v1.Group("/secret")
+	{
+		secret.POST("", h.CreateClientSecret)
+		secret.GET("/:id", h.GetClientSecret)
+		secret.PUT("/:id", h.UpdateClientSecret)
+		secret.DELETE("/:id", h.DeleteClientSecret)
 	}
 }
 
