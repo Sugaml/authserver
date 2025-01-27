@@ -143,23 +143,24 @@ type ClientSecret struct {
 }
 
 type ClientSecretRequest struct {
-	Description string
-	Value       string
-	Expiration  *time.Time
-	ClientID    string
+	Description string     `json:"description"`
+	Value       string     `json:"value"`
+	Expiration  *time.Time `json:"expiration"`
+	ClientID    string     `json:"client_id"`
 }
 
 type ClientSecretResponse struct {
-	ID          uint
-	Description string
-	Value       string
-	Expiration  *time.Time
-	ClientID    string
+	ID          string
+	Description string     `json:"description"`
+	Value       string     `json:"value"`
+	Expiration  *time.Time `json:"expiration"`
+	ClientID    string     `json:"client_id"`
 }
 
 func (a *ClientSecret) New(r *ClientSecretRequest) {
 	a.Description = r.Description
 	a.Value = r.Value
+	a.ClientID = r.ClientID
 	a.Expiration = r.Expiration
 }
 

@@ -8,7 +8,7 @@ dropdb:
 	docker exec -it postgres dropdb authserver
 
 run:
-	go run cmd/authserver/main.go
+	go run cmd/main.go
 
 docs:
 	swag init -g ./cmd/authserver/main.go -o ./docs --parseInternal true

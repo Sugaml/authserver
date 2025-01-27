@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/google/uuid"
+
 type Map map[string]interface{}
 
 type Client struct {
@@ -25,9 +27,9 @@ type ClientRequest struct {
 	ID                string `json:"id"`
 	Enabled           bool
 	ApplicationID     string
-	ClientID          string
+	ClientID          string `json:"client_id"`
 	ProtocolType      string
-	ClientName        string
+	ClientName        string `json:"client_name"`
 	Description       string
 	ClientUri         string
 	LogoutUri         string
@@ -48,8 +50,12 @@ type ClientUpdateRequest struct {
 }
 
 func (a *Client) New(r *ClientRequest) {
+
 	a.ApplicationID = r.ApplicationID
 	a.ClientID = r.ClientID
+	if r.ClientID == "" {
+		a.ClientID = uuid.New().String()[:16]
+	}
 }
 
 func (a *Client) Validate() error {

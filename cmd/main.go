@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"os"
 
-	_ "github.com/sugaml/authserver/docs"
 	"github.com/sugaml/authserver/internal/adapter/auth/paseto"
 	"github.com/sugaml/authserver/internal/adapter/config"
 	http "github.com/sugaml/authserver/internal/adapter/handler"
@@ -20,9 +19,10 @@ import (
 // @title						auth-server API
 // @version						1.0
 // @description					This is a simple RESTful Service API written in Go using Gin web framework
-// @securityDefinitions.apikey 	ApiKeyAuth
+// @security					ApiKeyAuth
 // @in 							Header
 // @name 						Authorization
+
 func main() {
 	// Load environment variables
 	config, err := config.New()
