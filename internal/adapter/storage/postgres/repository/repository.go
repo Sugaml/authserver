@@ -14,6 +14,7 @@ type IRepository interface {
 	CustomerGetter
 	ClientGetter
 	ClientSecretGetter
+	ApplicationGetter
 }
 
 func NewRepository(db *gorm.DB) IRepository {
@@ -36,4 +37,8 @@ func (r *Repository) Client() port.ClientRepository {
 
 func (r *Repository) ClientSecret() port.ClientSecretRepository {
 	return newClientSecretRepository(r.db)
+}
+
+func (r *Repository) Application() port.ApplicationRepository {
+	return newApplicationRepository(r.db)
 }

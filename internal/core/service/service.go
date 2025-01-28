@@ -21,6 +21,7 @@ type IService interface {
 	CustomerServiceGetter
 	ClientServiceGetter
 	ClientSecretServiceGetter
+	ApplicationServiceGetter
 }
 
 func NewService(repo repository.IRepository) IService {
@@ -69,6 +70,10 @@ func (s *Service) Customer() port.CustomerService {
 
 func (s *Service) Client() port.ClientService {
 	return newClientService(s.repo)
+}
+
+func (s *Service) Application() port.ApplicationService {
+	return newApplicationService(s.repo)
 }
 
 func (s *Service) ClientSecret() port.ClientSecretService {

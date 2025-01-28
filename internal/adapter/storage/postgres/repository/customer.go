@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 	"github.com/sugaml/authserver/internal/core/domain"
 	"github.com/sugaml/authserver/internal/core/port"
 )
@@ -22,49 +23,41 @@ func newCustomerRepository(db *gorm.DB) *CustomerRepository {
 	}
 }
 
-// Create creates a new Customer in the database
 func (r *CustomerRepository) Create(ctx context.Context, data *domain.Customer) (*domain.Customer, error) {
-	err := r.db.Model(&domain.Customer{}).Create(data).Take(data).Error
-	if err != nil {
+	if err := r.db.Model(&domain.Customer{}).Create(&data).Error; err != nil {
 		return nil, err
 	}
-	return data, err
+	return data, nil
 }
 
-// GetByID gets a customer by ID from the database
-func (r *CustomerRepository) GetByID(ctx context.Context, id uint64) (*domain.Customer, error) {
+func (r *CustomerRepository) List(ctx context.Context, req *domain.ListCustomerRequest) ([]*domain.Customer, int, error) {
+	var datas []*domain.Customer
+	err := r.db.Model(&domain.Customer{}).Find(&datas).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return datas, 0, nil
+}
+
+func (r *CustomerRepository) Get(ctx context.Context, id string) (*domain.Customer, error) {
+	var data domain.Customer
+	if err := r.db.Model(&domain.Customer{}).
+		Take(&data, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
+
+func (r *CustomerRepository) Update(ctx context.Context, id string, req domain.Map) (*domain.Customer, error) {
 	data := &domain.Customer{}
-	err := r.db.Model(domain.Customer{}).Where("id = ? and is_active = true", id).Take(data).Error
+	err := r.db.Model(&domain.Customer{}).Where("id = ?", id).Updates(req).Take(&data).Error
 	if err != nil {
 		return nil, err
 	}
-	return data, err
+	return data, nil
 }
 
-// List lists all customers from the database
-func (r *CustomerRepository) List(ctx context.Context, skip, limit uint64) ([]domain.Customer, error) {
-	customers := []domain.Customer{}
-	err := r.db.Model(&domain.Customer{}).Order("id desc").Find(&customers).Error
-	if err != nil {
-		return nil, err
-	}
-	return customers, err
-}
-
-// Update updates a customer by ID in the database
-func (r *CustomerRepository) Update(ctx context.Context, data *domain.Customer) (*domain.Customer, error) {
-	customer := &domain.Customer{}
-	if data.Email != "" {
-		customer.Email = data.Email
-	}
-	err := r.db.Model(&domain.Customer{}).Where("id = ?", data.ID).Updates(customer).Error
-	if err != nil {
-		return &domain.Customer{}, err
-	}
-	return customer, nil
-}
-
-// Delete deletes a customer by ID from the database
-func (r *CustomerRepository) Delete(ctx context.Context, id uint64) error {
+func (r *CustomerRepository) Delete(ctx context.Context, id string) error {
+	logrus.Info("package repository Delete() Customer function called.")
 	return r.db.Model(&domain.Customer{}).Where("id = ?", id).Delete(&domain.Customer{}).Error
 }

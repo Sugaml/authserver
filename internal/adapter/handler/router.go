@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	sloggin "github.com/samber/slog-gin"
+	"github.com/sugaml/authserver/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -32,7 +33,9 @@ func (h *Handler) NewRouter() error {
 	}
 	// Swagger
 	h.router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	v1 := h.router.Group("api/v1")
+	v1 := h.router.Group("api/v1/auth")
+	// Set Swagger
+	setupSwagger(v1)
 	v1.POST("/token/connect", func(c *gin.Context) {
 		err := h.srv.HandleTokenRequest(c.Writer, c.Request)
 		if err != nil {
@@ -40,7 +43,10 @@ func (h *Handler) NewRouter() error {
 			return
 		}
 	})
+
 	h.User(v1)
+	h.Customer(v1)
+	h.Application(v1)
 	h.Client(v1)
 	h.Secret(v1)
 
@@ -64,6 +70,28 @@ func (h *Handler) User(v1 *gin.RouterGroup) {
 			}
 		}
 
+	}
+}
+
+// Customer Endpoint
+func (h *Handler) Customer(v1 *gin.RouterGroup) {
+	client := v1.Group("/customer")
+	{
+		client.POST("", h.CreateCustomer)
+		client.GET("/:id", h.GetCustomer)
+		client.PUT("/:id", h.UpdateCustomer)
+		client.DELETE("/:id", h.DeleteCustomer)
+	}
+}
+
+// Application Endpoint
+func (h *Handler) Application(v1 *gin.RouterGroup) {
+	client := v1.Group("/application")
+	{
+		client.POST("", h.CreateApplication)
+		client.GET("/:id", h.GetApplication)
+		client.PUT("/:id", h.UpdateApplication)
+		client.DELETE("/:id", h.DeleteApplication)
 	}
 }
 
@@ -97,4 +125,20 @@ func (h *Handler) Serve(listenAddr string) error {
 		os.Exit(1)
 	}
 	return h.router.Run(listenAddr)
+}
+
+// Swagger host path and basepath configuration
+func setupSwagger(v1 *gin.RouterGroup) {
+	hostPath := os.Getenv("HOST_PATH")
+	if hostPath == "" {
+		hostPath = "localhost:8080"
+	}
+	basePath := os.Getenv("BASE_PATH")
+	if basePath == "" {
+		basePath = "/api/v1/parking"
+	}
+	docs.SwaggerInfo.Host = hostPath
+	docs.SwaggerInfo.BasePath = basePath
+	v1.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

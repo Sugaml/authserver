@@ -1,6 +1,10 @@
 package domain
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Map map[string]interface{}
 
@@ -90,7 +94,8 @@ type ClientListRequest struct {
 }
 
 type ClientResponse struct {
-	ID                string `json:"id"`
+	ID                string    `json:"id"`
+	CreatedAt         time.Time `json:"created_at"`
 	Enabled           bool
 	ApplicationID     string
 	ClientID          string

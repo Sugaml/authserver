@@ -150,7 +150,8 @@ type ClientSecretRequest struct {
 }
 
 type ClientSecretResponse struct {
-	ID          string
+	ID          string     `json:"id"`
+	CreatedAt   time.Time  `json:"created_at"`
 	Description string     `json:"description"`
 	Value       string     `json:"value"`
 	Expiration  *time.Time `json:"expiration"`
