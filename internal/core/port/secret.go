@@ -11,6 +11,8 @@ type ClientSecretRepository interface {
 	Create(ctx context.Context, data *domain.ClientSecret) (*domain.ClientSecret, error)
 	List(ctx context.Context, req *domain.ClientSecretListRequest) ([]*domain.ClientSecret, int, error)
 	ListByApplicationID(ctx context.Context, id string, req *domain.ClientSecretListRequest) ([]*domain.ClientSecret, int, error)
+	ListByClientID(ctx context.Context, id string) ([]*domain.ClientSecret, int, error)
+	GetClientIDAndValue(ctx context.Context, clientID, value string) (*domain.ClientSecret, error)
 	Get(ctx context.Context, id string) (*domain.ClientSecret, error)
 	Update(ctx context.Context, id string, req domain.Map) (*domain.ClientSecret, error)
 	UpdateIsActive(ctx context.Context, id string, isActive bool) (*domain.ClientSecret, error)

@@ -12,6 +12,7 @@ type ClientRepository interface {
 	List(ctx context.Context, req *domain.ClientListRequest) ([]*domain.Client, int, error)
 	ListByApplicationID(ctx context.Context, id string, req *domain.ClientListRequest) ([]*domain.Client, int, error)
 	Get(ctx context.Context, id string) (*domain.Client, error)
+	GetCliendID(ctx context.Context, clientID string) (*domain.Client, error)
 	Update(ctx context.Context, id string, req domain.Map) (*domain.Client, error)
 	UpdateIsActive(ctx context.Context, id string, isActive bool) (*domain.Client, error)
 	Delete(ctx context.Context, id string) error

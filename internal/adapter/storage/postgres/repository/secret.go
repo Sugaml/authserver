@@ -58,10 +58,28 @@ func (r *ClientSecretRepository) ListByApplicationID(ctx context.Context, id str
 	return datas, count, nil
 }
 
+func (r *ClientSecretRepository) ListByClientID(ctx context.Context, id string) ([]*domain.ClientSecret, int, error) {
+	var datas []*domain.ClientSecret
+	err := r.db.Model(&domain.ClientSecret{}).Where("client_id = ?", id).Find(&datas).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return datas, 0, nil
+}
+
 func (r *ClientSecretRepository) Get(ctx context.Context, id string) (*domain.ClientSecret, error) {
 	var data domain.ClientSecret
 	if err := r.db.Model(&domain.ClientSecret{}).
 		Take(&data, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
+
+func (r *ClientSecretRepository) GetClientIDAndValue(ctx context.Context, clientID, value string) (*domain.ClientSecret, error) {
+	var data domain.ClientSecret
+	err := r.db.Model(&domain.ClientSecret{}).Take(&data, "client_id = ? AND value", clientID, value).Error
+	if err != nil {
 		return nil, err
 	}
 	return &data, nil

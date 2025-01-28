@@ -8,7 +8,9 @@ import (
 // Migrate up database table
 func Migrate(db *gorm.DB) error {
 	return db.AutoMigrate(
-		domain.User{},
-		domain.Customer{},
+		&domain.User{},
+		&domain.Customer{},
+		&domain.Client{},
+		&domain.ClientSecret{},
 	).Error
 }

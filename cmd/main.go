@@ -67,8 +67,9 @@ func main() {
 
 	repo := repository.NewRepository(db)
 	svc := service.NewService(repo)
+	srv := svc.GetOauthServer()
 	// Init handler
-	handler := http.NewHandler(config.HTTP, svc, token)
+	handler := http.NewHandler(config.HTTP, svc, token, srv)
 
 	// Start server
 	listenAddr := fmt.Sprintf("%s:%s", config.HTTP.URL, config.HTTP.Port)

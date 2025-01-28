@@ -67,8 +67,15 @@ func (r *ClientRepository) ListByApplicationID(ctx context.Context, id string, r
 
 func (r *ClientRepository) Get(ctx context.Context, id string) (*domain.Client, error) {
 	var data domain.Client
-	if err := r.db.Model(&domain.Client{}).
-		Take(&data, "id = ?", id).Error; err != nil {
+	if err := r.db.Model(&domain.Client{}).Take(&data, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
+
+func (r *ClientRepository) GetCliendID(ctx context.Context, clientID string) (*domain.Client, error) {
+	var data domain.Client
+	if err := r.db.Model(&domain.Client{}).Take(&data, "client_id = ?", clientID).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil

@@ -2,6 +2,7 @@ package http
 
 import (
 	"log/slog"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -29,11 +30,16 @@ func (h *Handler) NewRouter() error {
 			return err
 		}
 	}
-
 	// Swagger
 	h.router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	v1 := h.router.Group("/v1")
-
+	v1 := h.router.Group("api/v1")
+	v1.POST("/token/connect", func(c *gin.Context) {
+		err := h.srv.HandleTokenRequest(c.Writer, c.Request)
+		if err != nil {
+			ErrorResponse(c, http.StatusInternalServerError, err)
+			return
+		}
+	})
 	h.User(v1)
 	h.Client(v1)
 	h.Secret(v1)
