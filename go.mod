@@ -15,6 +15,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
+	github.com/swaggo/swag v1.16.3
 	golang.org/x/crypto v0.25.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/oauth2.v3 v3.12.0
@@ -58,7 +59,6 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/samber/lo v1.38.1 // indirect
-	github.com/swaggo/swag v1.8.12 // indirect
 	github.com/tidwall/btree v0.0.0-20170113224114-9876f1454cf0 // indirect
 	github.com/tidwall/buntdb v1.1.0 // indirect
 	github.com/tidwall/gjson v1.3.2 // indirect

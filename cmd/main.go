@@ -1,5 +1,17 @@
 package main
 
+/*
+*************************************************************************
+
+Author: Babulal Tamang
+Purpose: Auth Server
+Model Name:
+Date: 23rd Jan 2025
+Additional Notes:
+
+****************************************************************************
+*/
+
 import (
 	"context"
 	"fmt"
@@ -16,13 +28,12 @@ import (
 	"github.com/sugaml/authserver/internal/core/service"
 )
 
-// @title						auth-server API
+// @title						Auth-Server API
 // @version						1.0
 // @description					This is a simple RESTful Service API written in Go using Gin web framework
-// @security					ApiKeyAuth
+// @securityDefinitions.apikey 	ApiKeyAuth
 // @in 							Header
 // @name 						Authorization
-
 func main() {
 	// Load environment variables
 	config, err := config.New()
