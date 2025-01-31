@@ -36,7 +36,7 @@ func (h *Handler) NewRouter() error {
 	v1 := h.router.Group("api/v1/auth")
 	// Set Swagger
 	setupSwagger(v1)
-	v1.POST("/token/connect", func(c *gin.Context) {
+	v1.POST("/connect/token", func(c *gin.Context) {
 		err := h.srv.HandleTokenRequest(c.Writer, c.Request)
 		if err != nil {
 			ErrorResponse(c, http.StatusInternalServerError, err)

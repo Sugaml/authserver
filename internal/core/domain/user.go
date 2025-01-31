@@ -22,22 +22,6 @@ func (user *User) NewUserResponse() UserResponse {
 	}
 }
 
-type RoleClaim struct {
-	ID         string `gorm:"primary_key"`
-	RoleID     string
-	ClaimType  string
-	ClaimValue string
-}
-
-type Role struct {
-	ID               string `gorm:"primary_key"`
-	Name             string
-	NormalizedName   string
-	ConcurrencyStamp string
-	RoleClaims       []RoleClaim       `gorm:"foreignkey:RoleID"`
-	RoleBundlesRoles []RoleBundlesRole `gorm:"foreignkey:RoleID"`
-}
-
 type UserClaim struct {
 	ID         string `gorm:"primary_key"`
 	UserID     string
@@ -252,26 +236,15 @@ type PersistedGrant struct {
 	Data         string
 }
 
-type ApiResource struct {
-	ID            string `gorm:"primary_key"`
-	Enabled       bool
-	Name          string
-	DisplayName   string
-	Description   string
-	ApiSecrets    []ApiSecret   `gorm:"foreignkey:ApiResourceID"`
-	ApiScopes     []ApiScope    `gorm:"foreignkey:ApiResourceID"`
-	ApiProperties []ApiProperty `gorm:"foreignkey:ApiResourceID"`
-}
-
 type ApiProperty struct {
-	ID            string `gorm:"primary_key"`
+	BaseModel
 	Key           string
 	Value         string
 	ApiResourceID string
 }
 
 type ApiScope struct {
-	ID                      string `gorm:"primary_key"`
+	BaseModel
 	Name                    string
 	DisplayName             string
 	Description             string
@@ -283,13 +256,13 @@ type ApiScope struct {
 }
 
 type ApiScopeClaim struct {
-	ID         string `gorm:"primary_key"`
+	BaseModel
 	Type       string
 	ApiScopeID string
 }
 
 type ApiSecret struct {
-	ID            string `gorm:"primary_key"`
+	BaseModel
 	Description   string
 	Value         string
 	Expiration    *time.Time
@@ -297,7 +270,7 @@ type ApiSecret struct {
 }
 
 type IdentityResource struct {
-	ID                      string `gorm:"primary_key"`
+	BaseModel
 	Enabled                 bool
 	Name                    string
 	DisplayName             string
@@ -310,64 +283,33 @@ type IdentityResource struct {
 }
 
 type IdentityClaim struct {
-	ID                 string `gorm:"primary_key"`
+	BaseModel
 	Type               string
 	IdentityResourceID string
 }
 
 type IdentityProperty struct {
-	ID                 string `gorm:"primary_key"`
+	BaseModel
 	Key                string
 	Value              string
 	IdentityResourceID string
 }
 
-type RoleBundle struct {
-	ID               string `gorm:"primary_key"`
-	CreatedUtc       time.Time
-	UpdatedUtc       time.Time
-	Name             string
-	Description      string
-	RoleBundlesRoles []RoleBundlesRole `gorm:"foreignkey:RoleBundleID"`
-}
-
-type RoleBundlesRole struct {
-	ID           string `gorm:"primary_key"`
-	RoleBundleID string
-	RoleID       string
-}
-
-type Tenant struct {
-	ID                 string `gorm:"primary_key"`
-	CreatedUtc         time.Time
-	UpdatedUtc         time.Time
-	Name               string
-	Description        string
-	RoleBundlesTenants []RoleBundlesTenant `gorm:"foreignkey:TenantID"`
-}
-
 type RoleBundlesTenant struct {
-	ID           string `gorm:"primary_key"`
+	BaseModel
 	RoleBundleID string
 	TenantID     string
 }
 
 type Setting struct {
-	ID              string `gorm:"primary_key"`
-	CreatedUtc      time.Time
-	UpdatedUtc      time.Time
+	BaseModel
 	Name            string
 	ValueStringUtf8 string
 	GlobalDefault   bool
 }
 
-type EFMigrationHistory struct {
-	MigrationId    string `gorm:"primary_key"`
-	ProductVersion string
-}
-
 type DataProtection struct {
-	ID         string `gorm:"primary_key"`
+	BaseModel
 	CreatedUtc time.Time
 	UpdatedUtc time.Time
 	Purpose    string
