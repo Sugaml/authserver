@@ -79,3 +79,15 @@ func (s *Service) Application() port.ApplicationService {
 func (s *Service) ClientSecret() port.ClientSecretService {
 	return newClientSecretService(s.repo)
 }
+
+func (s *Service) Resource() port.ResourceService {
+	return newResourceService(s.repo)
+}
+
+func (s *Service) Role() port.RoleService {
+	return newRoleService(s.repo)
+}
+
+func (s *Service) Tenant() port.TenantService {
+	return newTenantService(s.repo)
+}

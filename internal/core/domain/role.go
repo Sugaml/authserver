@@ -22,6 +22,11 @@ type RoleRequest struct {
 	NormalizedName string `json:"normalized_name"`
 }
 
+type RoleListRequest struct {
+	Name           string `json:"name"`
+	NormalizedName string `json:"normalized_name"`
+}
+
 type RoleUpdateRequest struct {
 	Name           string `json:"name"`
 	NormalizedName string `json:"normalized_name"`
