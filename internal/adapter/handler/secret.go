@@ -17,7 +17,7 @@ import (
 // @Security 		ApiKeyAuth
 // @Param			ClientSecretRequest			body		domain.ClientSecretRequest		true		"Add ClientSecret Request"
 // @Success			200							{array}		domain.ClientSecretResponse					"Business  ClientSecret created"
-// @Router			/ClientSecret 		[post]
+// @Router			/client-secret 		[post]
 func (ph *Handler) CreateClientSecret(ctx *gin.Context) {
 	var req *domain.ClientSecretRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -41,7 +41,7 @@ func (ph *Handler) CreateClientSecret(ctx *gin.Context) {
 // @Security 		ApiKeyAuth
 // @Param 			id path string true "ClientSecret id"
 // @Success 		200 {object} domain.ClientSecretResponse
-// @Router 			/ClientSecret/{id} [get]
+// @Router 			/client-secret/{id} [get]
 func (ch *Handler) GetClientSecret(ctx *gin.Context) {
 	id := ctx.Param("id")
 	result, err := ch.svc.ClientSecret().Get(ctx, id)
@@ -62,7 +62,7 @@ func (ch *Handler) GetClientSecret(ctx *gin.Context) {
 // @Param 				id 								path 		string 								true 	"ClientSecret id"
 // @Param 				UpdateClientSecretRequest	 	body 		domain.ClientSecretUpdateRequest 	true 	"Update ClientSecret Response request"
 // @Success 			200 							{object} 	domain.ClientSecretResponse
-// @Router 				/ClientSecret/{id} 				[put]
+// @Router 				/client-secret/{id} 				[put]
 func (h *Handler) UpdateClientSecret(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var req *domain.ClientSecretUpdateRequest
@@ -92,7 +92,7 @@ func (h *Handler) UpdateClientSecret(ctx *gin.Context) {
 // @Security 			ApiKeyAuth
 // @Param 				id 						path 		string 						true 	"ClientSecret id"
 // @Success 			200 					{object} 	domain.ClientSecretResponse
-// @Router 				/ClientSecret/{id} 	[delete]
+// @Router 				/client-secret/{id} 	[delete]
 func (ch *Handler) DeleteClientSecret(ctx *gin.Context) {
 	id := ctx.Param("id")
 	if id == "" {

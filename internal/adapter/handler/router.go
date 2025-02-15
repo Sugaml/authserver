@@ -108,7 +108,7 @@ func (h *Handler) Client(v1 *gin.RouterGroup) {
 
 // Secret Endpoint
 func (h *Handler) Secret(v1 *gin.RouterGroup) {
-	secret := v1.Group("/secret")
+	secret := v1.Group("/client-secret")
 	{
 		secret.POST("", h.CreateClientSecret)
 		secret.GET("/:id", h.GetClientSecret)
