@@ -57,6 +57,7 @@ func (h *Handler) User(v1 *gin.RouterGroup) {
 	user := v1.Group("/users")
 	{
 		user.POST("/register", h.Register)
+		user.POST("/login", h.Login)
 
 		authUser := user.Group("/").Use(authMiddleware(h.token))
 		{

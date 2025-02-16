@@ -58,7 +58,7 @@ type User struct {
 	NormalizedUserName   string      `json:"normalized_user_name"`
 	Email                string      `json:"email"`
 	EmailConfirmed       bool        `json:"email_confirmed"`
-	Password             string      `json:"password_hash"`
+	Password             string      `json:"password"`
 	SecurityStamp        string      `json:"security_stamp"`
 	PhoneNumberConfirmed bool        `json:"phone_number_confirmed"`
 	TwoFactorEnabled     bool        `json:"two_factor_enabled"`
