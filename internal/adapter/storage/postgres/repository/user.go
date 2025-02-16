@@ -74,8 +74,8 @@ func (r *UserRepository) SetPassword(ctx context.Context, id uint64, password st
 }
 
 // List lists all users from the database
-func (r *UserRepository) List(ctx context.Context, skip, limit uint64) ([]domain.User, error) {
-	users := []domain.User{}
+func (r *UserRepository) List(ctx context.Context, skip, limit uint64) ([]*domain.User, error) {
+	users := []*domain.User{}
 	err := r.db.Model(&domain.User{}).Order("id desc").Find(users).Error
 	if err != nil {
 		return nil, err

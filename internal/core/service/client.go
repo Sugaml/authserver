@@ -28,7 +28,7 @@ func newClientService(repo repository.IRepository) *ClientService {
 // Create a new client
 func (s *ClientService) Create(ctx context.Context, req *domain.ClientRequest) (*domain.ClientResponse, error) {
 	logrus.Info("package service Create() client function called.")
-	data := &domain.Client{}
+	data := domain.Convert[domain.ClientRequest, domain.Client](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *ClientService) Create(ctx context.Context, req *domain.ClientRequest) (
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create client", err)
 	}
-	return domain.Response[domain.Client, domain.ClientResponse](result), nil
+	return domain.Convert[domain.Client, domain.ClientResponse](result), nil
 }
 
 // Get returns a client by id
@@ -48,7 +48,7 @@ func (s *ClientService) Get(ctx context.Context, id string) (*domain.ClientRespo
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Client, domain.ClientResponse](result), nil
+	return domain.Convert[domain.Client, domain.ClientResponse](result), nil
 }
 
 func (s *ClientService) ListByApplicationID(ctx context.Context, id string, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error) {
@@ -59,7 +59,7 @@ func (s *ClientService) ListByApplicationID(ctx context.Context, id string, req 
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Client, domain.ClientResponse](result))
+		datas = append(datas, domain.Convert[domain.Client, domain.ClientResponse](result))
 	}
 	return datas, count, nil
 }
@@ -73,7 +73,7 @@ func (s *ClientService) List(ctx context.Context, req *domain.ClientListRequest)
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Client, domain.ClientResponse](result))
+		datas = append(datas, domain.Convert[domain.Client, domain.ClientResponse](result))
 	}
 	return datas, count, nil
 }
@@ -96,7 +96,7 @@ func (cs *ClientService) Update(ctx context.Context, id string, req *domain.Clie
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Client, domain.ClientResponse](result), nil
+	return domain.Convert[domain.Client, domain.ClientResponse](result), nil
 }
 
 // Delet deletes a client

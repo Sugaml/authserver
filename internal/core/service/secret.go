@@ -28,7 +28,7 @@ func newClientSecretService(repo repository.IRepository) *SecretService {
 // Create a new Secret
 func (s *SecretService) Create(ctx context.Context, req *domain.ClientSecretRequest) (*domain.ClientSecretResponse, error) {
 	logrus.Info("package service Create() Secret function called.")
-	data := &domain.ClientSecret{}
+	data := domain.Convert[domain.ClientSecretRequest, domain.ClientSecret](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *SecretService) Create(ctx context.Context, req *domain.ClientSecretRequ
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Secret", err)
 	}
-	return domain.Response[domain.ClientSecret, domain.ClientSecretResponse](result), nil
+	return domain.Convert[domain.ClientSecret, domain.ClientSecretResponse](result), nil
 }
 
 // Get returns a Secret by id
@@ -48,7 +48,7 @@ func (s *SecretService) Get(ctx context.Context, id string) (*domain.ClientSecre
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.ClientSecret, domain.ClientSecretResponse](result), nil
+	return domain.Convert[domain.ClientSecret, domain.ClientSecretResponse](result), nil
 }
 
 func (s *SecretService) ListByApplicationID(ctx context.Context, id string, req *domain.ClientSecretListRequest) ([]*domain.ClientSecretResponse, int, error) {
@@ -59,7 +59,7 @@ func (s *SecretService) ListByApplicationID(ctx context.Context, id string, req 
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.ClientSecret, domain.ClientSecretResponse](result))
+		datas = append(datas, domain.Convert[domain.ClientSecret, domain.ClientSecretResponse](result))
 	}
 	return datas, count, nil
 }
@@ -73,7 +73,7 @@ func (s *SecretService) List(ctx context.Context, req *domain.ClientSecretListRe
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.ClientSecret, domain.ClientSecretResponse](result))
+		datas = append(datas, domain.Convert[domain.ClientSecret, domain.ClientSecretResponse](result), nil)
 	}
 	return datas, count, nil
 }
@@ -96,13 +96,13 @@ func (cs *SecretService) Update(ctx context.Context, id string, req *domain.Clie
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.ClientSecret, domain.ClientSecretResponse](result), nil
+	return domain.Convert[domain.ClientSecret, domain.ClientSecretResponse](result), nil
 }
 
 // Delet deletes a Secret
 func (s *SecretService) Delete(ctx context.Context, id string) error {
 	if id == "" {
-		return errors.New("required Secret id")
+		return errors.New("required client secret id")
 	}
 	err := s.repo.ClientSecret().Delete(ctx, id)
 	if err != nil {

@@ -21,7 +21,7 @@ type UserRepository interface {
 	// SetPassword selects a user by email
 	SetPassword(ctx context.Context, id uint64, password string) (*domain.User, error)
 	// List selects a list of users with pagination
-	List(ctx context.Context, skip, limit uint64) ([]domain.User, error)
+	List(ctx context.Context, skip, limit uint64) ([]*domain.User, error)
 	// Update updates a user
 	Update(ctx context.Context, user *domain.User) (*domain.User, error)
 	// Delete deletes a user
@@ -31,13 +31,13 @@ type UserRepository interface {
 // UserService is an interface for interacting with user-related business logic
 type UserService interface {
 	// Register registers a new user
-	Register(ctx context.Context, user *domain.User) (*domain.User, error)
+	Register(ctx context.Context, user *domain.RegisterRequest) (*domain.UserResponse, error)
 	// Get returns a user by id
-	Get(ctx context.Context, id uint64) (*domain.User, error)
+	Get(ctx context.Context, id uint64) (*domain.UserResponse, error)
 	// List returns a list of users with pagination
-	List(ctx context.Context, skip, limit uint64) ([]domain.User, error)
+	List(ctx context.Context, skip, limit uint64) ([]*domain.UserResponse, error)
 	// Update updates a user
-	Update(ctx context.Context, user *domain.User) (*domain.User, error)
+	Update(ctx context.Context, user *domain.User) (*domain.UserResponse, error)
 	// Delet deletes a user
 	Delete(ctx context.Context, id uint64) error
 }

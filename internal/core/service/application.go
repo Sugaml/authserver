@@ -28,7 +28,7 @@ func newApplicationService(repo repository.IRepository) *ApplicationService {
 // Create a new Application
 func (s *ApplicationService) Create(ctx context.Context, req *domain.ApplicationRequest) (*domain.ApplicationResponse, error) {
 	logrus.Info("package service Create() Application function called.")
-	data := &domain.Application{}
+	data := domain.Convert[domain.ApplicationRequest, domain.Application](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *ApplicationService) Create(ctx context.Context, req *domain.Application
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Application", err)
 	}
-	return domain.Response[domain.Application, domain.ApplicationResponse](result), nil
+	return domain.Convert[domain.Application, domain.ApplicationResponse](result), nil
 }
 
 // Get returns a Application by id
@@ -48,7 +48,7 @@ func (s *ApplicationService) Get(ctx context.Context, id string) (*domain.Applic
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Application, domain.ApplicationResponse](result), nil
+	return domain.Convert[domain.Application, domain.ApplicationResponse](result), nil
 }
 
 // List returns a list of Applications with pagination
@@ -60,7 +60,7 @@ func (s *ApplicationService) List(ctx context.Context, req *domain.ListApplicati
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Application, domain.ApplicationResponse](result))
+		datas = append(datas, domain.Convert[domain.Application, domain.ApplicationResponse](result))
 	}
 	return datas, count, nil
 }
@@ -83,7 +83,7 @@ func (cs *ApplicationService) Update(ctx context.Context, id string, req *domain
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Application, domain.ApplicationResponse](result), nil
+	return domain.Convert[domain.Application, domain.ApplicationResponse](result), nil
 }
 
 // Delet deletes a Application

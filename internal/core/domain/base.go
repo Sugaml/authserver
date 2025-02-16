@@ -13,35 +13,49 @@ type BaseModel struct {
 	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
 }
 
-// ConvertType is a utility function to convert one type to another.
-func convertType[T any, U any](from *T, to *U) error {
-	data, err := json.Marshal(from)
+func Convert[I, O any](input *I) *O {
+	var output O
+	bytes, err := json.Marshal(input)
 	if err != nil {
-		return err
+		fmt.Printf("Error in marshal :: %v", err)
+		return &output
 	}
-	return json.Unmarshal(data, to)
-}
-
-// Response is a generic function to convert a struct to a response type.
-func Response[T any, U any](input *T) *U {
-	var output U
-	err := convertType(input, &output)
+	err = json.Unmarshal(bytes, &output)
 	if err != nil {
-		fmt.Printf("Error converting type: %v\n", err)
-		return nil
+		fmt.Printf("Error in unmarshal :: %v", err)
+		return &output
 	}
 	return &output
 }
 
-func (req *ClientListRequest) Prepare() {
+func ConvertToJson(input any) []byte {
+	bytes, err := json.Marshal(input)
+	if err != nil {
+		fmt.Printf("Error in convertToJson :: %v", err)
+		return []byte{}
+	}
+	return bytes
+}
+
+func ConvertFromJson[T any](input []byte) T {
+	var output T
+	err := json.Unmarshal(input, &output)
+	if err != nil {
+		fmt.Printf("Error in convertFromJson :: %v", err)
+		return output
+	}
+	return output
+}
+
+func (req *ListRequest) Prepare() {
 	if req.Page < 1 {
 		req.Page = 1
 	}
 	if req.Size < 1 {
-		req.Size = 20
+		req.Size = 10
 	}
 	if req.SortColumn == "" {
-		req.SortColumn = "id"
+		req.SortColumn = "created_at"
 	}
 	if req.SortDirection == "" {
 		req.SortDirection = "desc"

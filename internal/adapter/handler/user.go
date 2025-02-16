@@ -7,34 +7,27 @@ import (
 	"github.com/sugaml/authserver/internal/core/domain"
 )
 
-// Register godoc
-//
-//	@Summary		Register a new user
-//	@Description	create a new user account with default role "cashier"
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
-//	@Success		200				{object}	domain.UserResponse	"User created"
-//	@Router			/users [post]
+// Register 		godoc
+// @Summary			Register a new user
+// @Description		reate a new user account with default role "cashier"
+// @Tags			Users
+// @Accept			json
+// @Produce			json
+// @Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
+// @Success			200							{object}	domain.UserResponse	"User created"
+// @Router			/users [post]
 func (uh *Handler) Register(ctx *gin.Context) {
-	var req domain.RegisterRequest
+	var req *domain.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
-	user := domain.User{
-		UserName: req.Name,
-		Email:    req.Email,
-		Password: req.Password,
-	}
-	_, err := uh.svc.User().Register(ctx, &user)
+	result, err := uh.svc.User().Register(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	SuccessResponse(ctx, user.NewUserResponse())
+	SuccessResponse(ctx, result)
 }
 
 // listUsersRequest represents the request body for listing users
@@ -56,24 +49,16 @@ type listUsersRequest struct {
 //	@Security		BearerAuth
 func (uh *Handler) ListUsers(ctx *gin.Context) {
 	var req listUsersRequest
-	var usersList []domain.UserResponse
-
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
 	users, err := uh.svc.User().List(ctx, req.Skip, req.Limit)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
-	for _, user := range users {
-		usersList = append(usersList, user.NewUserResponse())
-	}
-
-	SuccessResponse(ctx, usersList)
+	SuccessResponse(ctx, users)
 }
 
 // getUserRequest represents the request body for getting a user
@@ -99,12 +84,12 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := uh.svc.User().Get(ctx, req.ID)
+	result, err := uh.svc.User().Get(ctx, req.ID)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	SuccessResponse(ctx, user.NewUserResponse())
+	SuccessResponse(ctx, result)
 }
 
 // UpdateUser godoc

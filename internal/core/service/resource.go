@@ -28,7 +28,7 @@ func newResourceService(repo repository.IRepository) *ResourceService {
 // Create a new Resource
 func (s *ResourceService) Create(ctx context.Context, req *domain.ResourceRequest) (*domain.ResourceResponse, error) {
 	logrus.Info("package service Create() Resource function called.")
-	data := &domain.Resource{}
+	data := domain.Convert[domain.ResourceRequest, domain.Resource](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *ResourceService) Create(ctx context.Context, req *domain.ResourceReques
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Resource", err)
 	}
-	return domain.Response[domain.Resource, domain.ResourceResponse](result), nil
+	return domain.Convert[domain.Resource, domain.ResourceResponse](result), nil
 }
 
 // Get returns a Resource by id
@@ -48,7 +48,7 @@ func (s *ResourceService) Get(ctx context.Context, id string) (*domain.ResourceR
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Resource, domain.ResourceResponse](result), nil
+	return domain.Convert[domain.Resource, domain.ResourceResponse](result), nil
 }
 
 // List returns a list of Resources with pagination
@@ -60,7 +60,7 @@ func (s *ResourceService) List(ctx context.Context, req *domain.ResourceListRequ
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Resource, domain.ResourceResponse](result))
+		datas = append(datas, domain.Convert[domain.Resource, domain.ResourceResponse](result))
 	}
 	return datas, count, nil
 }
@@ -83,13 +83,13 @@ func (cs *ResourceService) Update(ctx context.Context, id string, req *domain.Re
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Resource, domain.ResourceResponse](result), nil
+	return domain.Convert[domain.Resource, domain.ResourceResponse](result), nil
 }
 
 // Delet deletes a Resource
 func (s *ResourceService) Delete(ctx context.Context, id string) error {
 	if id == "" {
-		return errors.New("required Resource id")
+		return errors.New("required resource id")
 	}
 	err := s.repo.Resource().Delete(ctx, id)
 	if err != nil {

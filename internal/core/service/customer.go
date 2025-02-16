@@ -28,7 +28,7 @@ func newCustomerService(repo repository.IRepository) *CustomerService {
 // Create a new Customer
 func (s *CustomerService) Create(ctx context.Context, req *domain.CustomerRequest) (*domain.CustomerResponse, error) {
 	logrus.Info("package service Create() Customer function called.")
-	data := &domain.Customer{}
+	data := domain.Convert[domain.CustomerRequest, domain.Customer](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *CustomerService) Create(ctx context.Context, req *domain.CustomerReques
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Customer", err)
 	}
-	return domain.Response[domain.Customer, domain.CustomerResponse](result), nil
+	return domain.Convert[domain.Customer, domain.CustomerResponse](result), nil
 }
 
 // Get returns a Customer by id
@@ -48,7 +48,7 @@ func (s *CustomerService) Get(ctx context.Context, id string) (*domain.CustomerR
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Customer, domain.CustomerResponse](result), nil
+	return domain.Convert[domain.Customer, domain.CustomerResponse](result), nil
 }
 
 // List returns a list of Customers with pagination
@@ -60,7 +60,7 @@ func (s *CustomerService) List(ctx context.Context, req *domain.ListCustomerRequ
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Customer, domain.CustomerResponse](result))
+		datas = append(datas, domain.Convert[domain.Customer, domain.CustomerResponse](result))
 	}
 	return datas, count, nil
 }
@@ -83,7 +83,7 @@ func (cs *CustomerService) Update(ctx context.Context, id string, req *domain.Cu
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Customer, domain.CustomerResponse](result), nil
+	return domain.Convert[domain.Customer, domain.CustomerResponse](result), nil
 }
 
 // Delet deletes a Customer

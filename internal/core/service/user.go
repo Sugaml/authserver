@@ -24,58 +24,56 @@ func newUserService(repo repository.IRepository) *UserService {
 }
 
 // Register creates a new user
-func (us *UserService) Register(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (us *UserService) Register(ctx context.Context, user *domain.RegisterRequest) (*domain.UserResponse, error) {
+	data := domain.Convert[domain.RegisterRequest, domain.User](user)
 	hashedPassword, err := util.HashPassword(user.Password)
 	if err != nil {
 		return nil, domain.ErrInternal
 	}
-
 	user.Password = hashedPassword
 	_, err = us.repo.User().GetByEmail(ctx, user.Email)
 	if err == nil {
 		return nil, err
 	}
-
-	user, err = us.repo.User().Create(ctx, user)
+	result, err := us.repo.User().Create(ctx, data)
 	if err != nil {
 		if err == domain.ErrConflictingData {
 			return nil, err
 		}
 		return nil, domain.ErrInternal
 	}
-
-	return user, nil
+	return domain.Convert[domain.User, domain.UserResponse](result), nil
 }
 
 // Get gets a user by ID
-func (us *UserService) Get(ctx context.Context, id uint64) (*domain.User, error) {
-	var user *domain.User
-
-	user, err := us.repo.User().GetByID(ctx, id)
+func (us *UserService) Get(ctx context.Context, id uint64) (*domain.UserResponse, error) {
+	result, err := us.repo.User().GetByID(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
 			return nil, err
 		}
 		return nil, domain.ErrInternal
 	}
-
-	return user, nil
+	return domain.Convert[domain.User, domain.UserResponse](result), nil
 }
 
 // List lists all users
-func (us *UserService) List(ctx context.Context, skip, limit uint64) ([]domain.User, error) {
-	var users []domain.User
+func (us *UserService) List(ctx context.Context, skip, limit uint64) ([]*domain.UserResponse, error) {
+	var userResponse []*domain.UserResponse
 
 	users, err := us.repo.User().List(ctx, skip, limit)
 	if err != nil {
 		return nil, domain.ErrInternal
 	}
+	for _, user := range users {
+		userResponse = append(userResponse, domain.Convert[domain.User, domain.UserResponse](user))
+	}
 
-	return users, nil
+	return userResponse, nil
 }
 
 // Update updates a user's name, email, and password
-func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.UserResponse, error) {
 	_, err := us.repo.User().GetByID(ctx, uint64(user.ID))
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -95,7 +93,7 @@ func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.U
 
 	user.Password = hashedPassword
 
-	_, err = us.repo.User().Update(ctx, user)
+	result, err := us.repo.User().Update(ctx, user)
 	if err != nil {
 		if err == domain.ErrConflictingData {
 			return nil, err
@@ -103,7 +101,7 @@ func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.U
 		return nil, domain.ErrInternal
 	}
 
-	return user, nil
+	return domain.Convert[domain.User, domain.UserResponse](result), nil
 }
 
 // Delete deletes a user by ID

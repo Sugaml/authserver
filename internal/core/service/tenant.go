@@ -28,7 +28,7 @@ func newTenantService(repo repository.IRepository) *TenantService {
 // Create a new Tenant
 func (s *TenantService) Create(ctx context.Context, req *domain.TenantRequest) (*domain.TenantResponse, error) {
 	logrus.Info("package service Create() Tenant function called.")
-	data := &domain.Tenant{}
+	data := domain.Convert[domain.TenantRequest, domain.Tenant](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *TenantService) Create(ctx context.Context, req *domain.TenantRequest) (
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Tenant", err)
 	}
-	return domain.Response[domain.Tenant, domain.TenantResponse](result), nil
+	return domain.Convert[domain.Tenant, domain.TenantResponse](result), nil
 }
 
 // Get returns a Tenant by id
@@ -48,7 +48,7 @@ func (s *TenantService) Get(ctx context.Context, id string) (*domain.TenantRespo
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Tenant, domain.TenantResponse](result), nil
+	return domain.Convert[domain.Tenant, domain.TenantResponse](result), nil
 }
 
 // List returns a list of Tenants with pagination
@@ -60,7 +60,7 @@ func (s *TenantService) List(ctx context.Context, req *domain.TenantListRequest)
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Tenant, domain.TenantResponse](result))
+		datas = append(datas, domain.Convert[domain.Tenant, domain.TenantResponse](result))
 	}
 	return datas, count, nil
 }
@@ -83,7 +83,7 @@ func (cs *TenantService) Update(ctx context.Context, id string, req *domain.Tena
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Tenant, domain.TenantResponse](result), nil
+	return domain.Convert[domain.Tenant, domain.TenantResponse](result), nil
 }
 
 // Delet deletes a Tenant

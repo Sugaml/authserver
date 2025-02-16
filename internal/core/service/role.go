@@ -28,7 +28,7 @@ func newRoleService(repo repository.IRepository) *RoleService {
 // Create a new Role
 func (s *RoleService) Create(ctx context.Context, req *domain.RoleRequest) (*domain.RoleResponse, error) {
 	logrus.Info("package service Create() Role function called.")
-	data := &domain.Role{}
+	data := domain.Convert[domain.RoleRequest, domain.Role](req)
 	data.New(req)
 	err := data.Validate()
 	if err != nil {
@@ -38,7 +38,7 @@ func (s *RoleService) Create(ctx context.Context, req *domain.RoleRequest) (*dom
 	if err != nil {
 		return nil, fmt.Errorf("encountered %v error create Role", err)
 	}
-	return domain.Response[domain.Role, domain.RoleResponse](result), nil
+	return domain.Convert[domain.Role, domain.RoleResponse](result), nil
 }
 
 // Get returns a Role by id
@@ -48,7 +48,7 @@ func (s *RoleService) Get(ctx context.Context, id string) (*domain.RoleResponse,
 	if err != nil {
 		return nil, err
 	}
-	return domain.Response[domain.Role, domain.RoleResponse](result), nil
+	return domain.Convert[domain.Role, domain.RoleResponse](result), nil
 }
 
 // List returns a list of Roles with pagination
@@ -60,7 +60,7 @@ func (s *RoleService) List(ctx context.Context, req *domain.RoleListRequest) ([]
 		return nil, count, err
 	}
 	for _, result := range results {
-		datas = append(datas, domain.Response[domain.Role, domain.RoleResponse](result))
+		datas = append(datas, domain.Convert[domain.Role, domain.RoleResponse](result))
 	}
 	return datas, count, nil
 }
@@ -83,7 +83,7 @@ func (cs *RoleService) Update(ctx context.Context, id string, req *domain.RoleUp
 		return nil, domain.ErrInternal
 	}
 
-	return domain.Response[domain.Role, domain.RoleResponse](result), nil
+	return domain.Convert[domain.Role, domain.RoleResponse](result), nil
 }
 
 // Delet deletes a Role

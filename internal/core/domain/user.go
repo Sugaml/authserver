@@ -18,7 +18,11 @@ type UserResponse struct {
 // NewUserResponse is a helper function to create a response body for handling user data
 func (user *User) NewUserResponse() UserResponse {
 	return UserResponse{
-		ID: user.ID,
+		ID:        user.ID,
+		Name:      user.UserName,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 	}
 }
 
