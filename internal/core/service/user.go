@@ -27,14 +27,18 @@ func newUserService(repo repository.IRepository) *UserService {
 }
 
 // Register creates a new user
-func (us *UserService) Register(ctx context.Context, user *domain.RegisterRequest) (*domain.UserResponse, error) {
-	data := domain.Convert[domain.RegisterRequest, domain.User](user)
-	hashedPassword, err := util.HashPassword(user.Password)
+func (us *UserService) Register(ctx context.Context, req *domain.RegisterRequest) (*domain.UserResponse, error) {
+	err := req.Validate()
+	if err != nil {
+		return nil, err
+	}
+	data := domain.Convert[domain.RegisterRequest, domain.User](req)
+	hashedPassword, err := util.HashPassword(req.Password)
 	if err != nil {
 		return nil, domain.ErrInternal
 	}
-	user.Password = hashedPassword
-	_, err = us.repo.User().GetByEmail(ctx, user.Email)
+	data.Password = hashedPassword
+	_, err = us.repo.User().GetByEmail(ctx, data.Email)
 	if err == nil {
 		return nil, errors.New("email already exists")
 	}
@@ -120,12 +124,16 @@ func (us *UserService) Delete(ctx context.Context, id uint64) error {
 	return us.repo.User().Delete(ctx, id)
 }
 
-func (s *UserService) Login(ctx context.Context, user *domain.LoginRequest) (*domain.UserResponse, error) {
-	result, err := s.repo.User().GetByEmail(ctx, user.Email)
+func (s *UserService) Login(ctx context.Context, req *domain.LoginRequest) (*domain.UserResponse, error) {
+	err := req.Validate()
 	if err != nil {
 		return nil, err
 	}
-	err = util.VerifyPassword(result.Password, user.Password)
+	result, err := s.repo.User().GetByEmail(ctx, req.Email)
+	if err != nil {
+		return nil, err
+	}
+	err = util.VerifyPassword(result.Password, req.Password)
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return nil, err
 	}

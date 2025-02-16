@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"errors"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -83,10 +84,30 @@ type RegisterRequest struct {
 	PhoneNumber    string `json:"phone_number"`
 }
 
+func (r *RegisterRequest) Validate() error {
+	if r.Email == "" {
+		return errors.New("email is required")
+	}
+	if r.Password == "" {
+		return errors.New("password is required")
+	}
+	return nil
+}
+
 // LoginRequest represents the request body for creating a user
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email" example:"test@example.com"`
 	Password string `json:"password" binding:"required,min=8" example:"12345678"`
+}
+
+func (r *LoginRequest) Validate() error {
+	if r.Email == "" {
+		return errors.New("email is required")
+	}
+	if r.Password == "" {
+		return errors.New("password is required")
+	}
+	return nil
 }
 
 // UpdateUserRequest represents the request body for updating a user
