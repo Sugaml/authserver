@@ -32,6 +32,8 @@ type UserRepository interface {
 type UserService interface {
 	// Register registers a new user
 	Register(ctx context.Context, user *domain.RegisterRequest) (*domain.UserResponse, error)
+
+	Login(ctx context.Context, user *domain.LoginRequest) (*domain.UserResponse, error)
 	// Get returns a user by id
 	Get(ctx context.Context, id uint64) (*domain.UserResponse, error)
 	// List returns a list of users with pagination

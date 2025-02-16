@@ -15,7 +15,7 @@ import (
 // @Produce			json
 // @Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
 // @Success			200							{object}	domain.UserResponse	"User created"
-// @Router			/users [post]
+// @Router			/users/register [post]
 func (uh *Handler) Register(ctx *gin.Context) {
 	var req *domain.RegisterRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -23,6 +23,29 @@ func (uh *Handler) Register(ctx *gin.Context) {
 		return
 	}
 	result, err := uh.svc.User().Register(ctx, req)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusBadRequest, err)
+		return
+	}
+	SuccessResponse(ctx, result)
+}
+
+// Register 		godoc
+// @Summary			Register a new user
+// @Description		reate a new user account with default role "cashier"
+// @Tags			Users
+// @Accept			json
+// @Produce			json
+// @Param			registerRequest	body		domain.RegisterRequest	true	"Register request"
+// @Success			200							{object}	domain.UserResponse	"User created"
+// @Router			/users/login [post]
+func (uh *Handler) Login(ctx *gin.Context) {
+	var req *domain.LoginRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ErrorResponse(ctx, http.StatusBadRequest, err)
+		return
+	}
+	result, err := uh.svc.User().Login(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return

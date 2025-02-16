@@ -2,11 +2,14 @@ package service
 
 import (
 	"context"
+	"errors"
 
+	"github.com/sirupsen/logrus"
 	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
 	"github.com/sugaml/authserver/internal/core/port"
 	"github.com/sugaml/authserver/internal/core/util"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserServiceGetter interface {
@@ -33,7 +36,7 @@ func (us *UserService) Register(ctx context.Context, user *domain.RegisterReques
 	user.Password = hashedPassword
 	_, err = us.repo.User().GetByEmail(ctx, user.Email)
 	if err == nil {
-		return nil, err
+		return nil, errors.New("email already exists")
 	}
 	result, err := us.repo.User().Create(ctx, data)
 	if err != nil {
@@ -115,4 +118,17 @@ func (us *UserService) Delete(ctx context.Context, id uint64) error {
 	}
 
 	return us.repo.User().Delete(ctx, id)
+}
+
+func (s *UserService) Login(ctx context.Context, user *domain.LoginRequest) (*domain.UserResponse, error) {
+	result, err := s.repo.User().GetByEmail(ctx, user.Email)
+	if err != nil {
+		return nil, err
+	}
+	err = util.VerifyPassword(result.Password, user.Password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return nil, err
+	}
+	logrus.Info("Login user id :: ", result.ID)
+	return domain.Convert[domain.User, domain.UserResponse](result), nil
 }

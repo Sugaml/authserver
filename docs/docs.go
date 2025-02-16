@@ -15,164 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/ClientSecret": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Add a new ClientSecret",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ClientSecret"
-                ],
-                "summary": "Add a new ClientSecret",
-                "parameters": [
-                    {
-                        "description": "Add ClientSecret Request",
-                        "name": "ClientSecretRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.ClientSecretRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Business  ClientSecret created",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.ClientSecretResponse"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/ClientSecret/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get ClientSecret from Id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ClientSecret"
-                ],
-                "summary": "Get ClientSecret",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ClientSecret id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ClientSecretResponse"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Update ClientSecret from Id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ClientSecret"
-                ],
-                "summary": "Update ClientSecret",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ClientSecret id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update ClientSecret Response request",
-                        "name": "UpdateClientSecretRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.ClientSecretUpdateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ClientSecretResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete ClientSecret from Id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ClientSecret"
-                ],
-                "summary": "Delete ClientSecret",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ClientSecret id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ClientSecretResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/application": {
             "get": {
                 "security": [
@@ -406,6 +248,164 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/domain.ClientResponse"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/client-secret": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a new ClientSecret",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientSecret"
+                ],
+                "summary": "Add a new ClientSecret",
+                "parameters": [
+                    {
+                        "description": "Add ClientSecret Request",
+                        "name": "ClientSecretRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ClientSecretRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Business  ClientSecret created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.ClientSecretResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/client-secret/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get ClientSecret from Id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientSecret"
+                ],
+                "summary": "Get ClientSecret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ClientSecret id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ClientSecretResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update ClientSecret from Id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientSecret"
+                ],
+                "summary": "Update ClientSecret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ClientSecret id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update ClientSecret Response request",
+                        "name": "UpdateClientSecretRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ClientSecretUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ClientSecretResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete ClientSecret from Id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClientSecret"
+                ],
+                "summary": "Delete ClientSecret",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ClientSecret id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ClientSecretResponse"
                         }
                     }
                 }
@@ -758,9 +758,45 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {}
-            },
+            }
+        },
+        "/users/login": {
             "post": {
-                "description": "create a new user account with default role \"cashier\"",
+                "description": "reate a new user account with default role \"cashier\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "Register request",
+                        "name": "registerRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.UserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/register": {
+            "post": {
+                "description": "reate a new user account with default role \"cashier\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -1228,7 +1264,6 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "name",
                 "password"
             ],
             "properties": {

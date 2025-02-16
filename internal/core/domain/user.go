@@ -74,13 +74,19 @@ type User struct {
 
 // RegisterRequest represents the request body for creating a user
 type RegisterRequest struct {
-	Name           string `json:"name" binding:"required" example:"Sugam"`
+	Name           string `json:"name" example:"Sugam"`
 	UserName       string `json:"user_name"`
 	Email          string `json:"email" binding:"required,email" example:"test@example.com"`
 	Password       string `json:"password" binding:"required,min=8" example:"12345678"`
 	EmailConfirmed bool   `json:"email_confirmed"`
 	SecurityStamp  string `json:"security_stamp"`
 	PhoneNumber    string `json:"phone_number"`
+}
+
+// LoginRequest represents the request body for creating a user
+type LoginRequest struct {
+	Email    string `json:"email" binding:"required,email" example:"test@example.com"`
+	Password string `json:"password" binding:"required,min=8" example:"12345678"`
 }
 
 // UpdateUserRequest represents the request body for updating a user
