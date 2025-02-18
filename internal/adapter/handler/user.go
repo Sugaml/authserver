@@ -50,7 +50,15 @@ func (uh *Handler) Login(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	SuccessResponse(ctx, result)
+	access_token, err := uh.token.CreateToken(result.ID)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusBadRequest, err)
+		return
+	}
+	SuccessResponse(ctx, map[string]interface{}{
+		"user":         result,
+		"access_token": access_token,
+	})
 }
 
 // listUsersRequest represents the request body for listing users
@@ -59,17 +67,16 @@ type listUsersRequest struct {
 	Limit uint64 `form:"limit" example:"5"`
 }
 
-// ListUsers godoc
-//
-//	@Summary		List users
-//	@Description	List users with pagination
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Param			skip	query		uint64			true	"Skip"
-//	@Param			limit	query		uint64			true	"Limit"
-//	@Router			/users [get]
-//	@Security		BearerAuth
+// ListUsers 		godoc
+// @Summary			List users
+// @Description		List users with pagination
+// @Tags			Users
+// @Accept			json
+// @Produce			json
+// @Param			skip	query		uint64			true	"Skip"
+// @Param			limit	query		uint64			true	"Limit"
+// @Router			/users [get]
+// @Security		BearerAuth
 func (uh *Handler) ListUsers(ctx *gin.Context) {
 	var req listUsersRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {

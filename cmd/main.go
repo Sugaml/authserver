@@ -31,7 +31,7 @@ import (
 // @title						Auth-Server API
 // @version						1.0
 // @description					This is a simple RESTful Service API written in Go using Gin web framework
-// @securityDefinitions.apikey 	ApiKeyAuth
+// @securityDefinitions.apikey 	BearerAuth
 // @in 							Header
 // @name 						Authorization
 func main() {
