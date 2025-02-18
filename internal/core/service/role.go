@@ -6,27 +6,11 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 )
 
-type RoleServiceGetter interface {
-	Role() port.RoleService
-}
-
-type RoleService struct {
-	repo repository.IRepository
-}
-
-func newRoleService(repo repository.IRepository) *RoleService {
-	return &RoleService{
-		repo: repo,
-	}
-}
-
 // Create a new Role
-func (s *RoleService) Create(ctx context.Context, req *domain.RoleRequest) (*domain.RoleResponse, error) {
+func (s *Service) CreateRole(ctx context.Context, req *domain.RoleRequest) (*domain.RoleResponse, error) {
 	logrus.Info("package service Create() Role function called.")
 	data := domain.Convert[domain.RoleRequest, domain.Role](req)
 	data.New(req)
@@ -42,7 +26,7 @@ func (s *RoleService) Create(ctx context.Context, req *domain.RoleRequest) (*dom
 }
 
 // Get returns a Role by id
-func (s *RoleService) Get(ctx context.Context, id string) (*domain.RoleResponse, error) {
+func (s *Service) GetRole(ctx context.Context, id string) (*domain.RoleResponse, error) {
 	logrus.Info("package service Get() Role function called.")
 	result, err := s.repo.Role().Get(ctx, id)
 	if err != nil {
@@ -52,7 +36,7 @@ func (s *RoleService) Get(ctx context.Context, id string) (*domain.RoleResponse,
 }
 
 // List returns a list of Roles with pagination
-func (s *RoleService) List(ctx context.Context, req *domain.RoleListRequest) ([]*domain.RoleResponse, int, error) {
+func (s *Service) ListRole(ctx context.Context, req *domain.RoleListRequest) ([]*domain.RoleResponse, int, error) {
 	logrus.Info("package service List() Role function called.")
 	var datas []*domain.RoleResponse
 	results, count, err := s.repo.Role().List(ctx, req)
@@ -66,7 +50,7 @@ func (s *RoleService) List(ctx context.Context, req *domain.RoleListRequest) ([]
 }
 
 // Update updates a Role
-func (cs *RoleService) Update(ctx context.Context, id string, req *domain.RoleUpdateRequest) (*domain.RoleResponse, error) {
+func (cs *Service) UpdateRole(ctx context.Context, id string, req *domain.RoleUpdateRequest) (*domain.RoleResponse, error) {
 	_, err := cs.repo.Role().Get(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -82,12 +66,11 @@ func (cs *RoleService) Update(ctx context.Context, id string, req *domain.RoleUp
 		}
 		return nil, domain.ErrInternal
 	}
-
 	return domain.Convert[domain.Role, domain.RoleResponse](result), nil
 }
 
 // Delet deletes a Role
-func (s *RoleService) Delete(ctx context.Context, id string) error {
+func (s *Service) DeleteRole(ctx context.Context, id string) error {
 	if id == "" {
 		return errors.New("required Role id")
 	}

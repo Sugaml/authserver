@@ -22,7 +22,7 @@ func (uh *Handler) Register(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	result, err := uh.svc.User().Register(ctx, req)
+	result, err := uh.svc.RegisterUser(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
@@ -45,7 +45,7 @@ func (uh *Handler) Login(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	result, err := uh.svc.User().Login(ctx, req)
+	result, err := uh.svc.LoginUser(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
@@ -83,7 +83,7 @@ func (uh *Handler) ListUsers(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	users, err := uh.svc.User().List(ctx, req.Skip, req.Limit)
+	users, err := uh.svc.ListUser(ctx, req.Skip, req.Limit)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
@@ -113,8 +113,7 @@ func (uh *Handler) GetUser(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-
-	result, err := uh.svc.User().Get(ctx, req.ID)
+	result, err := uh.svc.GetUser(ctx, req.ID)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
@@ -166,7 +165,7 @@ func (uh *Handler) DeleteUser(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	err := uh.svc.User().Delete(ctx, req.ID)
+	err := uh.svc.DeleteUser(ctx, req.ID)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return

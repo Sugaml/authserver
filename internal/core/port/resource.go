@@ -17,9 +17,9 @@ type ResourceRepository interface {
 
 // type ResourceService interface is an interface for interacting with type Resource-related data
 type ResourceService interface {
-	Create(ctx context.Context, data *domain.ResourceRequest) (*domain.ResourceResponse, error)
-	List(ctx context.Context, req *domain.ResourceListRequest) ([]*domain.ResourceResponse, int, error)
-	Get(ctx context.Context, id string) (*domain.ResourceResponse, error)
-	Update(ctx context.Context, id string, req *domain.ResourceUpdateRequest) (*domain.ResourceResponse, error)
-	Delete(ctx context.Context, id string) error
+	CreateResource(ctx context.Context, data *domain.ResourceRequest) (*domain.ResourceResponse, error)
+	ListResource(ctx context.Context, req *domain.ResourceListRequest) ([]*domain.ResourceResponse, int, error)
+	GetResource(ctx context.Context, id string) (*domain.ResourceResponse, error)
+	UpdateResource(ctx context.Context, id string, req *domain.ResourceUpdateRequest) (*domain.ResourceResponse, error)
+	DeleteResource(ctx context.Context, id string) error
 }

@@ -15,13 +15,12 @@ Additional Notes:
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"os"
 
+	"github.com/sirupsen/logrus"
 	"github.com/sugaml/authserver/internal/adapter/auth/paseto"
 	"github.com/sugaml/authserver/internal/adapter/config"
 	http "github.com/sugaml/authserver/internal/adapter/handler"
-	"github.com/sugaml/authserver/internal/adapter/logger"
 	"github.com/sugaml/authserver/internal/adapter/storage/postgres"
 	"github.com/sugaml/authserver/internal/adapter/storage/postgres/migrations"
 	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
@@ -38,56 +37,57 @@ func main() {
 	// Load environment variables
 	config, err := config.New()
 	if err != nil {
-		slog.Error("Error loading environment variables", "error", err)
+		logrus.Error("Error loading environment variables", "error", err)
 		os.Exit(1)
 	}
 
-	// Set logger
-	logger.Set(config.App)
-
-	slog.Info("Starting the application", "app", config.App.Name, "env", config.App.Env)
+	logrus.Info("Starting the application", "app", config.App.Name, "env", config.App.Env)
 
 	// Init database
 	ctx := context.Background()
 	db, err := postgres.New(ctx, config.DB)
 	if err != nil {
-		slog.Error("Error initializing database connection", "error", err)
+		logrus.Error("Error initializing database connection", "error", err)
 		os.Exit(1)
 	}
 	defer db.Close()
 
-	slog.Info("Successfully connected to the database", "db", config.DB.Connection)
+	logrus.Info("Successfully connected to the database", "db", config.DB.Connection)
 
 	// // Migrate database
 	err = migrations.Migrate(db)
 	if err != nil {
-		slog.Error("Error migrating database", "error", err)
+		logrus.Error("Error migrating database", "error", err)
 		os.Exit(1)
 	}
 
-	slog.Info("Successfully migrated the database")
+	logrus.Info("Successfully migrated the database")
 
-	slog.Info("Successfully connected to the cache server")
+	logrus.Info("Successfully connected to the cache server")
 
 	// Init token service
 	token, err := paseto.New(config.Token)
 	if err != nil {
-		slog.Error("Error initializing token service", "error", err)
+		logrus.Error("Error initializing token service", "error", err)
 		os.Exit(1)
 	}
-
+	// Init data layer
 	repo := repository.NewRepository(db)
+
+	//oauth server
+	srv := service.GetOauthServer(repo)
+
+	// Init service
 	svc := service.NewService(repo)
-	srv := svc.GetOauthServer()
 	// Init handler
 	handler := http.NewHandler(config.HTTP, svc, token, srv)
 
 	// Start server
 	listenAddr := fmt.Sprintf("%s:%s", config.HTTP.URL, config.HTTP.Port)
-	slog.Info("Starting the HTTP server", "listen_address", listenAddr)
+	logrus.Info("Starting the HTTP server", "listen_address", listenAddr)
 	err = handler.Serve(listenAddr)
 	if err != nil {
-		slog.Error("Error starting the HTTP server", "error", err)
+		logrus.Error("Error starting the HTTP server", "error", err)
 		os.Exit(1)
 	}
 }

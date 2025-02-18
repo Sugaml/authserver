@@ -6,27 +6,11 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 )
 
-type CustomerServiceGetter interface {
-	Customer() port.CustomerService
-}
-
-type CustomerService struct {
-	repo repository.IRepository
-}
-
-func newCustomerService(repo repository.IRepository) *CustomerService {
-	return &CustomerService{
-		repo: repo,
-	}
-}
-
 // Create a new Customer
-func (s *CustomerService) Create(ctx context.Context, req *domain.CustomerRequest) (*domain.CustomerResponse, error) {
+func (s *Service) CreateCustomer(ctx context.Context, req *domain.CustomerRequest) (*domain.CustomerResponse, error) {
 	logrus.Info("package service Create() Customer function called.")
 	data := domain.Convert[domain.CustomerRequest, domain.Customer](req)
 	data.New(req)
@@ -42,7 +26,7 @@ func (s *CustomerService) Create(ctx context.Context, req *domain.CustomerReques
 }
 
 // Get returns a Customer by id
-func (s *CustomerService) Get(ctx context.Context, id string) (*domain.CustomerResponse, error) {
+func (s *Service) GetCustomer(ctx context.Context, id string) (*domain.CustomerResponse, error) {
 	logrus.Info("package service Get() Customer function called.")
 	result, err := s.repo.Customer().Get(ctx, id)
 	if err != nil {
@@ -52,7 +36,7 @@ func (s *CustomerService) Get(ctx context.Context, id string) (*domain.CustomerR
 }
 
 // List returns a list of Customers with pagination
-func (s *CustomerService) List(ctx context.Context, req *domain.ListCustomerRequest) ([]*domain.CustomerResponse, int, error) {
+func (s *Service) ListCustomer(ctx context.Context, req *domain.ListCustomerRequest) ([]*domain.CustomerResponse, int, error) {
 	logrus.Info("package service List() Customer function called.")
 	var datas []*domain.CustomerResponse
 	results, count, err := s.repo.Customer().List(ctx, req)
@@ -66,7 +50,7 @@ func (s *CustomerService) List(ctx context.Context, req *domain.ListCustomerRequ
 }
 
 // Update updates a Customer
-func (cs *CustomerService) Update(ctx context.Context, id string, req *domain.CustomerUpdateRequest) (*domain.CustomerResponse, error) {
+func (cs *Service) UpdateCustomer(ctx context.Context, id string, req *domain.CustomerUpdateRequest) (*domain.CustomerResponse, error) {
 	_, err := cs.repo.Customer().Get(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -87,7 +71,7 @@ func (cs *CustomerService) Update(ctx context.Context, id string, req *domain.Cu
 }
 
 // Delet deletes a Customer
-func (s *CustomerService) Delete(ctx context.Context, id string) error {
+func (s *Service) DeleteCustomer(ctx context.Context, id string) error {
 	if id == "" {
 		return errors.New("required customer id")
 	}

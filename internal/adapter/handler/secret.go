@@ -24,7 +24,7 @@ func (ph *Handler) CreateClientSecret(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	result, err := ph.svc.ClientSecret().Create(ctx, req)
+	result, err := ph.svc.CreateSecret(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -44,7 +44,7 @@ func (ph *Handler) CreateClientSecret(ctx *gin.Context) {
 // @Router 			/client-secret/{id} [get]
 func (ch *Handler) GetClientSecret(ctx *gin.Context) {
 	id := ctx.Param("id")
-	result, err := ch.svc.ClientSecret().Get(ctx, id)
+	result, err := ch.svc.GetSecret(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -70,12 +70,12 @@ func (h *Handler) UpdateClientSecret(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	_, err := h.svc.ClientSecret().Update(ctx, id, req)
+	_, err := h.svc.UpdateSecret(ctx, id, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	result, err := h.svc.ClientSecret().Get(ctx, id)
+	result, err := h.svc.GetSecret(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -99,12 +99,12 @@ func (ch *Handler) DeleteClientSecret(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, errors.New("required ClientSecret id"))
 		return
 	}
-	result, err := ch.svc.ClientSecret().Get(ctx, id)
+	result, err := ch.svc.GetSecret(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	err = ch.svc.ClientSecret().Delete(ctx, id)
+	err = ch.svc.DeleteSecret(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return

@@ -6,27 +6,11 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 )
 
-type ClientServiceGetter interface {
-	Client() port.ClientService
-}
-
-type ClientService struct {
-	repo repository.IRepository
-}
-
-func newClientService(repo repository.IRepository) *ClientService {
-	return &ClientService{
-		repo: repo,
-	}
-}
-
 // Create a new client
-func (s *ClientService) Create(ctx context.Context, req *domain.ClientRequest) (*domain.ClientResponse, error) {
+func (s *Service) CreateClient(ctx context.Context, req *domain.ClientRequest) (*domain.ClientResponse, error) {
 	logrus.Info("package service Create() client function called.")
 	data := domain.Convert[domain.ClientRequest, domain.Client](req)
 	data.New(req)
@@ -42,7 +26,7 @@ func (s *ClientService) Create(ctx context.Context, req *domain.ClientRequest) (
 }
 
 // Get returns a client by id
-func (s *ClientService) Get(ctx context.Context, id string) (*domain.ClientResponse, error) {
+func (s *Service) GetClient(ctx context.Context, id string) (*domain.ClientResponse, error) {
 	logrus.Info("package service Get() client function called.")
 	result, err := s.repo.Client().Get(ctx, id)
 	if err != nil {
@@ -51,7 +35,7 @@ func (s *ClientService) Get(ctx context.Context, id string) (*domain.ClientRespo
 	return domain.Convert[domain.Client, domain.ClientResponse](result), nil
 }
 
-func (s *ClientService) ListByApplicationID(ctx context.Context, id string, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error) {
+func (s *Service) ListByApplicationID(ctx context.Context, id string, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error) {
 	logrus.Info("package service ListByApplicationID() client function called.")
 	var datas []*domain.ClientResponse
 	results, count, err := s.repo.Client().ListByApplicationID(ctx, id, req)
@@ -65,7 +49,7 @@ func (s *ClientService) ListByApplicationID(ctx context.Context, id string, req 
 }
 
 // List returns a list of clients with pagination
-func (s *ClientService) List(ctx context.Context, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error) {
+func (s *Service) ListClient(ctx context.Context, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error) {
 	logrus.Info("package service List() client function called.")
 	var datas []*domain.ClientResponse
 	results, count, err := s.repo.Client().List(ctx, req)
@@ -79,7 +63,7 @@ func (s *ClientService) List(ctx context.Context, req *domain.ClientListRequest)
 }
 
 // Update updates a client
-func (cs *ClientService) Update(ctx context.Context, id string, req *domain.ClientUpdateRequest) (*domain.ClientResponse, error) {
+func (cs *Service) UpdateClient(ctx context.Context, id string, req *domain.ClientUpdateRequest) (*domain.ClientResponse, error) {
 	_, err := cs.repo.Client().Get(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -100,7 +84,7 @@ func (cs *ClientService) Update(ctx context.Context, id string, req *domain.Clie
 }
 
 // Delet deletes a client
-func (s *ClientService) Delete(ctx context.Context, id string) error {
+func (s *Service) DeleteClient(ctx context.Context, id string) error {
 	if id == "" {
 		return errors.New("required client id")
 	}

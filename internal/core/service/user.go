@@ -5,29 +5,13 @@ import (
 	"errors"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 	"github.com/sugaml/authserver/internal/core/util"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserServiceGetter interface {
-	User() port.UserService
-}
-
-type UserService struct {
-	repo repository.IRepository
-}
-
-func newUserService(repo repository.IRepository) *UserService {
-	return &UserService{
-		repo: repo,
-	}
-}
-
 // Register creates a new user
-func (us *UserService) Register(ctx context.Context, req *domain.RegisterRequest) (*domain.UserResponse, error) {
+func (us *Service) RegisterUser(ctx context.Context, req *domain.RegisterRequest) (*domain.UserResponse, error) {
 	err := req.Validate()
 	if err != nil {
 		return nil, err
@@ -53,7 +37,7 @@ func (us *UserService) Register(ctx context.Context, req *domain.RegisterRequest
 }
 
 // Get gets a user by ID
-func (us *UserService) Get(ctx context.Context, id uint64) (*domain.UserResponse, error) {
+func (us *Service) GetUser(ctx context.Context, id uint64) (*domain.UserResponse, error) {
 	result, err := us.repo.User().GetByID(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -65,7 +49,7 @@ func (us *UserService) Get(ctx context.Context, id uint64) (*domain.UserResponse
 }
 
 // List lists all users
-func (us *UserService) List(ctx context.Context, skip, limit uint64) ([]*domain.UserResponse, error) {
+func (us *Service) ListUser(ctx context.Context, skip, limit uint64) ([]*domain.UserResponse, error) {
 	var userResponse []*domain.UserResponse
 
 	users, err := us.repo.User().List(ctx, skip, limit)
@@ -80,7 +64,7 @@ func (us *UserService) List(ctx context.Context, skip, limit uint64) ([]*domain.
 }
 
 // Update updates a user's name, email, and password
-func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.UserResponse, error) {
+func (us *Service) UpdateUser(ctx context.Context, user *domain.User) (*domain.UserResponse, error) {
 	_, err := us.repo.User().GetByID(ctx, uint64(user.ID))
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -112,7 +96,7 @@ func (us *UserService) Update(ctx context.Context, user *domain.User) (*domain.U
 }
 
 // Delete deletes a user by ID
-func (us *UserService) Delete(ctx context.Context, id uint64) error {
+func (us *Service) DeleteUser(ctx context.Context, id uint64) error {
 	_, err := us.repo.User().GetByID(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -120,11 +104,10 @@ func (us *UserService) Delete(ctx context.Context, id uint64) error {
 		}
 		return domain.ErrInternal
 	}
-
 	return us.repo.User().Delete(ctx, id)
 }
 
-func (s *UserService) Login(ctx context.Context, req *domain.LoginRequest) (*domain.UserResponse, error) {
+func (s *Service) LoginUser(ctx context.Context, req *domain.LoginRequest) (*domain.UserResponse, error) {
 	err := req.Validate()
 	if err != nil {
 		return nil, err
@@ -137,6 +120,6 @@ func (s *UserService) Login(ctx context.Context, req *domain.LoginRequest) (*dom
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return nil, err
 	}
-	logrus.Info("Login user id :: ", result.ID)
+	logrus.Info("Loggedin user id :: ", result.ID)
 	return domain.Convert[domain.User, domain.UserResponse](result), nil
 }

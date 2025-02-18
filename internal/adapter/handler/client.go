@@ -24,7 +24,7 @@ func (ph *Handler) CreateClient(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	result, err := ph.svc.Client().Create(ctx, req)
+	result, err := ph.svc.CreateClient(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -44,7 +44,7 @@ func (ph *Handler) CreateClient(ctx *gin.Context) {
 // @Router 			/client/{id} [get]
 func (ch *Handler) GetClient(ctx *gin.Context) {
 	id := ctx.Param("id")
-	result, err := ch.svc.Client().Get(ctx, id)
+	result, err := ch.svc.GetClient(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -70,12 +70,12 @@ func (h *Handler) UpdateClient(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	data, err := h.svc.Client().Update(ctx, id, req)
+	data, err := h.svc.UpdateClient(ctx, id, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	result, err := h.svc.Client().Get(ctx, data.ID)
+	result, err := h.svc.GetClient(ctx, data.ID)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -99,12 +99,12 @@ func (ch *Handler) DeleteClient(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, errors.New("required client id"))
 		return
 	}
-	result, err := ch.svc.Client().Get(ctx, id)
+	result, err := ch.svc.GetClient(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	err = ch.svc.Client().Delete(ctx, id)
+	err = ch.svc.DeleteClient(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return

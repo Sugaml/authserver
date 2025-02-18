@@ -15,29 +15,20 @@ type Service struct {
 	repo repository.IRepository
 }
 
-type IService interface {
-	GetOauthServer() *server.Server
-	UserServiceGetter
-	CustomerServiceGetter
-	ClientServiceGetter
-	ClientSecretServiceGetter
-	ApplicationServiceGetter
-}
-
-func NewService(repo repository.IRepository) IService {
+func NewService(repo repository.IRepository) port.IService {
 	return &Service{
 		repo: repo,
 	}
 }
 
-func (s *Service) GetOauthServer() *server.Server {
+func GetOauthServer(repo repository.IRepository) *server.Server {
 	manager := manage.NewDefaultManager()
 	manager.SetAuthorizeCodeTokenCfg(manage.DefaultAuthorizeCodeTokenCfg)
 
 	// Token memory store
 	manager.MustTokenStorage(store.NewMemoryTokenStore())
 
-	clientStore := newClientStotreService(s.repo)
+	clientStore := newClientStotreService(repo)
 	// Client database store
 	manager.MapClientStorage(clientStore)
 
@@ -58,36 +49,4 @@ func (s *Service) GetOauthServer() *server.Server {
 		log.Println("Response Error:", re.Error.Error())
 	})
 	return srv
-}
-
-func (s *Service) User() port.UserService {
-	return newUserService(s.repo)
-}
-
-func (s *Service) Customer() port.CustomerService {
-	return newCustomerService(s.repo)
-}
-
-func (s *Service) Client() port.ClientService {
-	return newClientService(s.repo)
-}
-
-func (s *Service) Application() port.ApplicationService {
-	return newApplicationService(s.repo)
-}
-
-func (s *Service) ClientSecret() port.ClientSecretService {
-	return newClientSecretService(s.repo)
-}
-
-func (s *Service) Resource() port.ResourceService {
-	return newResourceService(s.repo)
-}
-
-func (s *Service) Role() port.RoleService {
-	return newRoleService(s.repo)
-}
-
-func (s *Service) Tenant() port.TenantService {
-	return newTenantService(s.repo)
 }

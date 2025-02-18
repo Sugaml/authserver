@@ -6,27 +6,11 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 )
 
-type ApplicationServiceGetter interface {
-	Application() port.ApplicationService
-}
-
-type ApplicationService struct {
-	repo repository.IRepository
-}
-
-func newApplicationService(repo repository.IRepository) *ApplicationService {
-	return &ApplicationService{
-		repo: repo,
-	}
-}
-
 // Create a new Application
-func (s *ApplicationService) Create(ctx context.Context, req *domain.ApplicationRequest) (*domain.ApplicationResponse, error) {
+func (s *Service) CreateApplication(ctx context.Context, req *domain.ApplicationRequest) (*domain.ApplicationResponse, error) {
 	logrus.Info("package service Create() Application function called.")
 	data := domain.Convert[domain.ApplicationRequest, domain.Application](req)
 	data.New(req)
@@ -42,7 +26,7 @@ func (s *ApplicationService) Create(ctx context.Context, req *domain.Application
 }
 
 // Get returns a Application by id
-func (s *ApplicationService) Get(ctx context.Context, id string) (*domain.ApplicationResponse, error) {
+func (s *Service) GetApplication(ctx context.Context, id string) (*domain.ApplicationResponse, error) {
 	logrus.Info("package service Get() Application function called.")
 	result, err := s.repo.Application().Get(ctx, id)
 	if err != nil {
@@ -52,7 +36,7 @@ func (s *ApplicationService) Get(ctx context.Context, id string) (*domain.Applic
 }
 
 // List returns a list of Applications with pagination
-func (s *ApplicationService) List(ctx context.Context, req *domain.ListApplicationRequest) ([]*domain.ApplicationResponse, int, error) {
+func (s *Service) ListApplication(ctx context.Context, req *domain.ListApplicationRequest) ([]*domain.ApplicationResponse, int, error) {
 	logrus.Info("package service List() Application function called.")
 	var datas []*domain.ApplicationResponse
 	results, count, err := s.repo.Application().List(ctx, req)
@@ -66,7 +50,7 @@ func (s *ApplicationService) List(ctx context.Context, req *domain.ListApplicati
 }
 
 // Update updates a Application
-func (cs *ApplicationService) Update(ctx context.Context, id string, req *domain.ApplicationUpdateRequest) (*domain.ApplicationResponse, error) {
+func (cs *Service) UpdateApplication(ctx context.Context, id string, req *domain.ApplicationUpdateRequest) (*domain.ApplicationResponse, error) {
 	_, err := cs.repo.Application().Get(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -82,14 +66,13 @@ func (cs *ApplicationService) Update(ctx context.Context, id string, req *domain
 		}
 		return nil, domain.ErrInternal
 	}
-
 	return domain.Convert[domain.Application, domain.ApplicationResponse](result), nil
 }
 
 // Delet deletes a Application
-func (s *ApplicationService) Delete(ctx context.Context, id string) error {
+func (s *Service) DeleteApplication(ctx context.Context, id string) error {
 	if id == "" {
-		return errors.New("required Application id")
+		return errors.New("required application id")
 	}
 	err := s.repo.Application().Delete(ctx, id)
 	if err != nil {

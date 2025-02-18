@@ -20,10 +20,10 @@ type ClientRepository interface {
 
 // type ClientService interface is an interface for interacting with type Announcement-related data
 type ClientService interface {
-	Create(ctx context.Context, data *domain.ClientRequest) (*domain.ClientResponse, error)
-	List(ctx context.Context, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error)
+	CreateClient(ctx context.Context, data *domain.ClientRequest) (*domain.ClientResponse, error)
+	ListClient(ctx context.Context, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error)
 	ListByApplicationID(ctx context.Context, id string, req *domain.ClientListRequest) ([]*domain.ClientResponse, int, error)
-	Get(ctx context.Context, id string) (*domain.ClientResponse, error)
-	Update(ctx context.Context, id string, req *domain.ClientUpdateRequest) (*domain.ClientResponse, error)
-	Delete(ctx context.Context, id string) error
+	GetClient(ctx context.Context, id string) (*domain.ClientResponse, error)
+	UpdateClient(ctx context.Context, id string, req *domain.ClientUpdateRequest) (*domain.ClientResponse, error)
+	DeleteClient(ctx context.Context, id string) error
 }

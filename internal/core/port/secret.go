@@ -21,10 +21,10 @@ type ClientSecretRepository interface {
 
 // type ClientSecretService interface is an interface for interacting with type Announcement-related data
 type ClientSecretService interface {
-	Create(ctx context.Context, data *domain.ClientSecretRequest) (*domain.ClientSecretResponse, error)
-	List(ctx context.Context, req *domain.ClientSecretListRequest) ([]*domain.ClientSecretResponse, int, error)
-	ListByApplicationID(ctx context.Context, id string, req *domain.ClientSecretListRequest) ([]*domain.ClientSecretResponse, int, error)
-	Get(ctx context.Context, id string) (*domain.ClientSecretResponse, error)
-	Update(ctx context.Context, id string, req *domain.ClientSecretUpdateRequest) (*domain.ClientSecretResponse, error)
-	Delete(ctx context.Context, id string) error
+	CreateSecret(ctx context.Context, data *domain.ClientSecretRequest) (*domain.ClientSecretResponse, error)
+	ListSecret(ctx context.Context, req *domain.ClientSecretListRequest) ([]*domain.ClientSecretResponse, int, error)
+	ListSecretByApplicationID(ctx context.Context, id string, req *domain.ClientSecretListRequest) ([]*domain.ClientSecretResponse, int, error)
+	GetSecret(ctx context.Context, id string) (*domain.ClientSecretResponse, error)
+	UpdateSecret(ctx context.Context, id string, req *domain.ClientSecretUpdateRequest) (*domain.ClientSecretResponse, error)
+	DeleteSecret(ctx context.Context, id string) error
 }

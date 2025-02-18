@@ -24,7 +24,7 @@ func (p *Handler) CreateApplication(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	result, err := p.svc.Application().Create(ctx, req)
+	result, err := p.svc.CreateApplication(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -48,7 +48,7 @@ func (h *Handler) ListProviderApplication(ctx *gin.Context) {
 		ErrorResponse(ctx, 400, err)
 		return
 	}
-	result, count, err := h.svc.Application().List(ctx, &req)
+	result, count, err := h.svc.ListApplication(ctx, &req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -68,7 +68,7 @@ func (h *Handler) ListProviderApplication(ctx *gin.Context) {
 // @Router 			/application/{id} [get]
 func (h *Handler) GetApplication(ctx *gin.Context) {
 	id := ctx.Param("id")
-	result, err := h.svc.Application().Get(ctx, id)
+	result, err := h.svc.GetApplication(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -94,12 +94,12 @@ func (h *Handler) UpdateApplication(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	_, err := h.svc.Application().Update(ctx, id, req)
+	_, err := h.svc.UpdateApplication(ctx, id, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	result, err := h.svc.Application().Get(ctx, id)
+	result, err := h.svc.GetApplication(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -123,12 +123,12 @@ func (ch *Handler) DeleteApplication(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusBadRequest, errors.New("required Application id"))
 		return
 	}
-	result, err := ch.svc.Application().Get(ctx, id)
+	result, err := ch.svc.GetApplication(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	err = ch.svc.Application().Delete(ctx, id)
+	err = ch.svc.DeleteApplication(ctx, id)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return

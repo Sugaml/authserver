@@ -6,27 +6,11 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/sugaml/authserver/internal/adapter/storage/postgres/repository"
 	"github.com/sugaml/authserver/internal/core/domain"
-	"github.com/sugaml/authserver/internal/core/port"
 )
 
-type ResourceServiceGetter interface {
-	Resource() port.ResourceService
-}
-
-type ResourceService struct {
-	repo repository.IRepository
-}
-
-func newResourceService(repo repository.IRepository) *ResourceService {
-	return &ResourceService{
-		repo: repo,
-	}
-}
-
 // Create a new Resource
-func (s *ResourceService) Create(ctx context.Context, req *domain.ResourceRequest) (*domain.ResourceResponse, error) {
+func (s *Service) CreateResource(ctx context.Context, req *domain.ResourceRequest) (*domain.ResourceResponse, error) {
 	logrus.Info("package service Create() Resource function called.")
 	data := domain.Convert[domain.ResourceRequest, domain.Resource](req)
 	data.New(req)
@@ -42,7 +26,7 @@ func (s *ResourceService) Create(ctx context.Context, req *domain.ResourceReques
 }
 
 // Get returns a Resource by id
-func (s *ResourceService) Get(ctx context.Context, id string) (*domain.ResourceResponse, error) {
+func (s *Service) GetResource(ctx context.Context, id string) (*domain.ResourceResponse, error) {
 	logrus.Info("package service Get() Resource function called.")
 	result, err := s.repo.Resource().Get(ctx, id)
 	if err != nil {
@@ -52,7 +36,7 @@ func (s *ResourceService) Get(ctx context.Context, id string) (*domain.ResourceR
 }
 
 // List returns a list of Resources with pagination
-func (s *ResourceService) List(ctx context.Context, req *domain.ResourceListRequest) ([]*domain.ResourceResponse, int, error) {
+func (s *Service) ListResource(ctx context.Context, req *domain.ResourceListRequest) ([]*domain.ResourceResponse, int, error) {
 	logrus.Info("package service List() Resource function called.")
 	var datas []*domain.ResourceResponse
 	results, count, err := s.repo.Resource().List(ctx, req)
@@ -66,7 +50,7 @@ func (s *ResourceService) List(ctx context.Context, req *domain.ResourceListRequ
 }
 
 // Update updates a Resource
-func (cs *ResourceService) Update(ctx context.Context, id string, req *domain.ResourceUpdateRequest) (*domain.ResourceResponse, error) {
+func (cs *Service) UpdateResource(ctx context.Context, id string, req *domain.ResourceUpdateRequest) (*domain.ResourceResponse, error) {
 	_, err := cs.repo.Resource().Get(ctx, id)
 	if err != nil {
 		if err == domain.ErrDataNotFound {
@@ -87,7 +71,7 @@ func (cs *ResourceService) Update(ctx context.Context, id string, req *domain.Re
 }
 
 // Delet deletes a Resource
-func (s *ResourceService) Delete(ctx context.Context, id string) error {
+func (s *Service) DeleteResource(ctx context.Context, id string) error {
 	if id == "" {
 		return errors.New("required resource id")
 	}

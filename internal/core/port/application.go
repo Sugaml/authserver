@@ -17,9 +17,9 @@ type ApplicationRepository interface {
 
 // type ApplicationService interface is an interface for interacting with type Application-related data
 type ApplicationService interface {
-	Create(ctx context.Context, data *domain.ApplicationRequest) (*domain.ApplicationResponse, error)
-	List(ctx context.Context, req *domain.ListApplicationRequest) ([]*domain.ApplicationResponse, int, error)
-	Get(ctx context.Context, id string) (*domain.ApplicationResponse, error)
-	Update(ctx context.Context, id string, req *domain.ApplicationUpdateRequest) (*domain.ApplicationResponse, error)
-	Delete(ctx context.Context, id string) error
+	CreateApplication(ctx context.Context, data *domain.ApplicationRequest) (*domain.ApplicationResponse, error)
+	ListApplication(ctx context.Context, req *domain.ListApplicationRequest) ([]*domain.ApplicationResponse, int, error)
+	GetApplication(ctx context.Context, id string) (*domain.ApplicationResponse, error)
+	UpdateApplication(ctx context.Context, id string, req *domain.ApplicationUpdateRequest) (*domain.ApplicationResponse, error)
+	DeleteApplication(ctx context.Context, id string) error
 }

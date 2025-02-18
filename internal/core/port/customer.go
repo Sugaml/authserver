@@ -17,9 +17,9 @@ type CustomerRepository interface {
 
 // type CustomerService interface is an interface for interacting with type Customer-related data
 type CustomerService interface {
-	Create(ctx context.Context, data *domain.CustomerRequest) (*domain.CustomerResponse, error)
-	List(ctx context.Context, req *domain.ListCustomerRequest) ([]*domain.CustomerResponse, int, error)
-	Get(ctx context.Context, id string) (*domain.CustomerResponse, error)
-	Update(ctx context.Context, id string, req *domain.CustomerUpdateRequest) (*domain.CustomerResponse, error)
-	Delete(ctx context.Context, id string) error
+	CreateCustomer(ctx context.Context, data *domain.CustomerRequest) (*domain.CustomerResponse, error)
+	ListCustomer(ctx context.Context, req *domain.ListCustomerRequest) ([]*domain.CustomerResponse, int, error)
+	GetCustomer(ctx context.Context, id string) (*domain.CustomerResponse, error)
+	UpdateCustomer(ctx context.Context, id string, req *domain.CustomerUpdateRequest) (*domain.CustomerResponse, error)
+	DeleteCustomer(ctx context.Context, id string) error
 }
